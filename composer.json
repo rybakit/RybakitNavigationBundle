@@ -1,0 +1,21 @@
+{
+    "name": "rybakit/navigation-bundle",
+    "description": "A bundle to create hierachical navigations",
+    "keywords": ["navigation menu breadcrumbs"],
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Eugene Leonovich",
+            "email": "gen.work@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/framework-bundle": ">=2.0,<2.2-dev"
+    },
+    "autoload": {
+        "psr-0": {
+            "Rybakit\\Bundle\\NavigationBundle": ""
+        }
+    }
+}
