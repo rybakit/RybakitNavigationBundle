@@ -50,7 +50,7 @@ class NavigationExtension extends \Twig_Extension
     /**
      * Renders a menu.
      *
-     * @param ContainerInterface $tree
+     * @param ContainerInterface $navTree
      * @param array              $options
      *
      * @return string

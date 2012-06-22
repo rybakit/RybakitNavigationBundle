@@ -26,13 +26,17 @@ class NavigationItem extends AbstractContainer
 
     /**
      * @param string|null $label
+     * @param string|null $uri
      */
-    public function __construct($label = null)
+    public function __construct($label = null, $uri = null)
     {
         parent::__construct();
 
-        if ($label) {
+        if (null !== $label) {
             $this->setLabel($label);
+        }
+        if (null !== $uri) {
+            $this->setUri($uri);
         }
     }
 
