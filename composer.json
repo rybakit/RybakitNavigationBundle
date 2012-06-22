@@ -17,5 +17,6 @@
         "psr-0": {
             "Rybakit\\Bundle\\NavigationBundle": ""
         }
-    }
+    },
+    "target-dir": "Rybakit/Bundle/NavigationBundle" 
 }
