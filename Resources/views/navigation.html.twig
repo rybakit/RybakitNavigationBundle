@@ -1,6 +1,8 @@
 {% block menu %}
 {% spaceless %}
-    <ul class="nav">{{ items|raw }}</ul>
+    {% if items %}
+        <ul class="nav">{{ items|raw }}</ul>
+    {% endif %}
 {% endspaceless %}
 {% endblock %}
 
@@ -24,6 +26,7 @@
 {% endblock %}
 
 {% block breadcrumbs %}
+{% spaceless %}
     {% if items %}
         <ul class="breadcrumb">
             {% for item in items|reverse %}
@@ -38,6 +41,7 @@
             {% endfor %}
         </ul>
     {% endif %}
+{% endspaceless %}
 {% endblock %}
 
 {% block label %}
