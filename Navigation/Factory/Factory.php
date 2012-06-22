@@ -8,9 +8,22 @@ use Rybakit\Bundle\NavigationBundle\Navigation\NavigationItem;
 class Factory implements FactoryInterface
 {
     /**
+     * @var ContainerInterface
+     */
+    protected $itemPrototype;
+
+    /**
      * @var FactoryInterface
      */
     protected $parent;
+
+    /**
+     * @param ContainerInterface|null $itemPrototype
+     */
+    public function __construct(ContainerInterface $itemPrototype = null)
+    {
+        $this->itemPrototype = $itemPrototype ?: new NavigationItem();
+    }
 
     /**
      * {@inheritdoc}
@@ -29,7 +42,7 @@ class Factory implements FactoryInterface
      */
     public function create(array $options = array(), ContainerInterface $parent = null)
     {
-        $item = new NavigationItem();
+        $item = clone $this->itemPrototype;
 
         if ($parent) {
             $parent->add($item);

@@ -118,4 +118,10 @@ abstract class AbstractContainer implements ContainerInterface, \Countable
     {
         return iterator_count($this->getIterator());
     }
+
+    public function __clone()
+    {
+        $this->parent = null;
+        $this->items = clone $this->items;
+    }
 }
