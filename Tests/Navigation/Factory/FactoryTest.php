@@ -19,15 +19,15 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
             ),
         ));
 
-        $this->assertEquals($this->dumpContainer($nav), '0--1.1--1.2--1.2.1--1.3--');
+        $this->assertEquals($this->dumpContainer($nav), '(0)(1.1)(1.2)(1.2.1)(1.3)');
     }
 
-    protected function dumpContainer(NavigationItem $container, &$dump = '')
+    protected function dumpContainer(NavigationItem $container)
     {
-        $dump .= $container->getLabel().'--';
+        $dump = '('.$container->getLabel().')';
 
         foreach ($container as $item) {
-            $this->dumpContainer($item, $dump);
+            $dump .= $this->dumpContainer($item);
         }
 
         return $dump;
