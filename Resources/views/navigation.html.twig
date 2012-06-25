@@ -7,18 +7,22 @@
 {% endblock %}
 
 {% block menu_item %}
+{% spaceless %}
     <li{% if item.active %} class="active"{% endif %}>
         <a href="{{ item.uri }}">{{ block('label') }}</a>
     </li>
+{% endspaceless %}
 {% endblock %}
 
 {% block menu_item_children %}
+{% spaceless %}
     <li class="dropdown{% if item.active %} active{% endif %}">
         <a href="{{ item.uri }}" class="dropdown-toggle" data-toggle="dropdown">
             {{ block('label') }} <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">{{ items|raw }}</ul>
     </li>
+{% endspaceless %}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -27,7 +31,7 @@
         <ul class="breadcrumb">
             {% for item in items|reverse %}
                 <li>
-                    {% if loop.last %}
+                    {% if loop.last and options.last is not defined %}
                         {{ block('label') }}
                     {% else %}
                         <a href="{{ item.uri }}">{{ block('label') }}</a>
@@ -35,11 +39,16 @@
                     {% endif %}
                 </li>
             {% endfor %}
+            {% if options.last is defined %}
+                <li>{{ options.last }}</li>
+            {% endif %}
         </ul>
     {% endif %}
 {% endspaceless %}
 {% endblock %}
 
 {% block label %}
-    {{ item.label|trans(item.transParams|default({}), item.transDomain|default('messages')) }}
+{% spaceless %}
+    {{ item.label|trans(item.transParams|default({}), item.transDomain|default(null)) }}
+{% endspaceless %}
 {% endblock %}

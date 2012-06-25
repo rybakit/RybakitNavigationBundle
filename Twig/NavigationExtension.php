@@ -79,13 +79,17 @@ class NavigationExtension extends \Twig_Extension
      * Renders a breadcrumbs.
      *
      * @param ContainerInterface $current
-     * @param array              $options
+     * @param mixed              $options
      *
      * @return string
      */
-    public function renderBreadcrumbs(ContainerInterface $current, array $options = array())
+    public function renderBreadcrumbs(ContainerInterface $current, $options = array())
     {
         $this->ensureTemplate();
+
+        if (!is_array($options)) {
+            $options = array('last' => $options);
+        }
 
         $items = $this->createBreadcrumbIterator($current);
 
