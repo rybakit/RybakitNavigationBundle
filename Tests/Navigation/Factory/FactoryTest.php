@@ -19,7 +19,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
             ),
         ));
 
-        $this->assertEquals($this->dumpContainer($nav), '(0)(1.1)(1.2)(1.2.1)(1.3)');
+        $this->assertEquals('(0)(1.1)(1.2)(1.2.1)(1.3)', $this->dumpContainer($nav));
     }
 
     protected function dumpContainer(NavigationItem $container)
