@@ -27,17 +27,20 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $iterator->rewind();
         $clone121 = $iterator->current();
 
-        $this->assertNull($clone0->getParent());
-
+        $this->assertItemCopy($item0, $clone0);
         $this->assertItemCopy($item11, $clone11, $clone0);
         $this->assertItemCopy($item12, $clone12, $clone0);
         $this->assertItemCopy($item121, $clone121, $clone12);
     }
 
-    public function assertItemCopy($original, $clone, $cloneParent)
+    public function assertItemCopy(NavigationItem $original, NavigationItem $clone, NavigationItem $cloneParent = null)
     {
         $this->assertNotSame($original, $clone);
         $this->assertEquals($original->getLabel(), $clone->getLabel());
         $this->assertSame($cloneParent, $clone->getParent());
+
+        if ($originalParent = $original->getParent()) {
+            $this->assertNotSame($originalParent, $clone->getParent());
+        }
     }
 }
