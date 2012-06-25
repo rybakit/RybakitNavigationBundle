@@ -122,6 +122,12 @@ abstract class AbstractContainer implements ContainerInterface, \Countable
     public function __clone()
     {
         $this->parent = null;
-        $this->items = clone $this->items;
+
+        $items = $this->items;
+        $this->items = new \SplObjectStorage();
+
+        foreach ($items as $item) {
+            $this->add(clone $item);
+        }
     }
 }
