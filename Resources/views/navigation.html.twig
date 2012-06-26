@@ -17,7 +17,7 @@
 {% block menu_item_children %}
 {% spaceless %}
     <li class="dropdown{% if item.active %} active{% endif %}">
-        <a href="{{ item.uri }}" class="dropdown-toggle" data-toggle="dropdown">
+        <a href="{{ item.uri }}" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
             {{ block('label') }} <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">{{ items|raw }}</ul>
