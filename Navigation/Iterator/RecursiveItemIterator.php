@@ -2,7 +2,7 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Navigation\Iterator;
 
-class RecursiveContainerIterator extends \IteratorIterator implements \RecursiveIterator
+class RecursiveItemIterator extends \IteratorIterator implements \RecursiveIterator
 {
     public function hasChildren()
     {

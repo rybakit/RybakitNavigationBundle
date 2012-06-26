@@ -2,13 +2,13 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Navigation\Factory;
 
-use Rybakit\Bundle\NavigationBundle\Navigation\ContainerInterface;
+use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 use Rybakit\Bundle\NavigationBundle\Navigation\NavigationItem;
 
 class Factory implements FactoryInterface
 {
     /**
-     * @var ContainerInterface
+     * @var ItemInterface
      */
     protected $itemPrototype;
 
@@ -18,9 +18,9 @@ class Factory implements FactoryInterface
     protected $parent;
 
     /**
-     * @param ContainerInterface|null $itemPrototype
+     * @param ItemInterface|null $itemPrototype
      */
-    public function __construct(ContainerInterface $itemPrototype = null)
+    public function __construct(ItemInterface $itemPrototype = null)
     {
         $this->itemPrototype = $itemPrototype ?: new NavigationItem();
     }
@@ -40,7 +40,7 @@ class Factory implements FactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function create(array $options = array(), ContainerInterface $parent = null)
+    public function create(array $options = array(), ItemInterface $parent = null)
     {
         $item = clone $this->itemPrototype;
 
@@ -54,10 +54,10 @@ class Factory implements FactoryInterface
     }
 
     /**
-     * @param ContainerInterface $item
-     * @param array              $options
+     * @param ItemInterface $item
+     * @param array         $options
      */
-    protected function bindOptions(ContainerInterface $item, array $options)
+    protected function bindOptions(ItemInterface $item, array $options)
     {
         $children = empty($options['children']) ? array() : $options['children'];
         unset($options['children']);
@@ -75,13 +75,13 @@ class Factory implements FactoryInterface
     }
 
     /**
-     * @param ContainerInterface $item
-     * @param string             $option
-     * @param mixed              $value
+     * @param ItemInterface $item
+     * @param string        $option
+     * @param mixed         $value
      *
      * @throws \InvalidArgumentException
      */
-    protected function bindOption(ContainerInterface $item, $option, $value)
+    protected function bindOption(ItemInterface $item, $option, $value)
     {
         if (!is_string($option) || empty($option)) {
             throw new \InvalidArgumentException('Option name must be a non-empty string.');

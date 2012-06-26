@@ -2,7 +2,7 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Navigation\Factory;
 
-use Rybakit\Bundle\NavigationBundle\Navigation\ContainerInterface;
+use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 
 interface FactoryInterface
 {
@@ -14,10 +14,10 @@ interface FactoryInterface
     function setParent(FactoryInterface $parent);
 
     /**
-     * @param array                   $options
-     * @param ContainerInterface|null $parent
+     * @param array              $options
+     * @param ItemInterface|null $parent
      *
-     * @return ContainerInterface
+     * @return ItemInterface
      */
-    function create(array $options = array(), ContainerInterface $parent = null);
+    function create(array $options = array(), ItemInterface $parent = null);
 }

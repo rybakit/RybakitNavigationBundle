@@ -2,10 +2,10 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Navigation;
 
-abstract class AbstractContainer implements ContainerInterface, \Countable
+abstract class AbstractItem implements ItemInterface, \Countable
 {
     /**
-     * @var ContainerInterface
+     * @var ItemInterface
      */
     protected $parent;
 
@@ -22,7 +22,7 @@ abstract class AbstractContainer implements ContainerInterface, \Countable
     /**
      * {@inheritdoc}
      */
-    public function setParent(ContainerInterface $parent = null)
+    public function setParent(ItemInterface $parent = null)
     {
         if ($parent === $this) {
             throw new \InvalidArgumentException('An item cannot have itself as a parent.');
@@ -66,7 +66,7 @@ abstract class AbstractContainer implements ContainerInterface, \Countable
     /**
      * {@inheritdoc}
      */
-    public function add(ContainerInterface $item)
+    public function add(ItemInterface $item)
     {
         if ($item === $this) {
             throw new \InvalidArgumentException('An item cannot have itself as a child.');
@@ -81,7 +81,7 @@ abstract class AbstractContainer implements ContainerInterface, \Countable
     /**
      * {@inheritdoc}
      */
-    public function remove(ContainerInterface $item)
+    public function remove(ItemInterface $item)
     {
         if ($this->has($item)) {
             $this->items->detach($item);
@@ -94,7 +94,7 @@ abstract class AbstractContainer implements ContainerInterface, \Countable
     /**
      * {@inheritdoc}
      */
-    public function has(ContainerInterface $item)
+    public function has(ItemInterface $item)
     {
         return $this->items->contains($item);
     }

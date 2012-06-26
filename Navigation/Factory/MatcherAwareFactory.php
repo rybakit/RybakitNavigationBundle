@@ -2,7 +2,7 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Navigation\Factory;
 
-use Rybakit\Bundle\NavigationBundle\Navigation\ContainerInterface;
+use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 use Rybakit\Bundle\NavigationBundle\Navigation\Matcher\MatcherInterface;
 
 class MatcherAwareFactory implements FactoryInterface
@@ -44,7 +44,7 @@ class MatcherAwareFactory implements FactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function create(array $options = array(), ContainerInterface $parent = null)
+    public function create(array $options = array(), ItemInterface $parent = null)
     {
         if (!$this->isMatched && $this->matcher->match($options)) {
             //$item->setActive();

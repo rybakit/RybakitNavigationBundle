@@ -56,7 +56,7 @@ class RecursiveCallbackFilterIterator extends \RecursiveFilterIterator
             $iterator = $iterator->getIterator();
         }
 
-        return new static(new RecursiveContainerIterator($iterator), $this->callback);
+        return new static(new RecursiveItemIterator($iterator), $this->callback);
     }
 
     protected function filter(\Iterator $iterator)

@@ -2,7 +2,7 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Navigation\Iterator;
 
-use Rybakit\Bundle\NavigationBundle\Navigation\ContainerInterface;
+use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 
 class BreadcrumbIterator implements \Iterator
 {
@@ -10,7 +10,7 @@ class BreadcrumbIterator implements \Iterator
     protected $current;
     protected $pos = 0;
 
-    public function __construct(ContainerInterface $last)
+    public function __construct(ItemInterface $last)
     {
         $this->last = $last;
         $this->current = $last;

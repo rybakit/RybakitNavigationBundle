@@ -2,9 +2,9 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Twig;
 
-use Rybakit\Bundle\NavigationBundle\Navigation\ContainerInterface;
+use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 use Rybakit\Bundle\NavigationBundle\Navigation\NavigationItem;
-use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\RecursiveContainerIterator;
+use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\RecursiveItemIterator;
 use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\RecursiveCallbackFilterIterator;
 use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\BreadcrumbIterator;
 
@@ -50,16 +50,16 @@ class NavigationExtension extends \Twig_Extension
     /**
      * Renders a menu.
      *
-     * @param ContainerInterface $navTree
-     * @param array              $options
+     * @param ItemInterface $root
+     * @param array         $options
      *
      * @return string
      */
-    public function renderMenu(ContainerInterface $navTree, array $options = array())
+    public function renderMenu(ItemInterface $root, array $options = array())
     {
         $this->ensureTemplate();
 
-        $iterator = new RecursiveContainerIterator($navTree);
+        $iterator = new RecursiveItemIterator($root);
 
         if (!empty($options['visible_only']) && $options['visible_only']) {
             $iterator = new RecursiveCallbackFilterIterator($iterator, function($current) {
@@ -78,12 +78,12 @@ class NavigationExtension extends \Twig_Extension
     /**
      * Renders a breadcrumbs.
      *
-     * @param ContainerInterface $current
-     * @param mixed              $options
+     * @param ItemInterface $current
+     * @param mixed         $options
      *
      * @return string
      */
-    public function renderBreadcrumbs(ContainerInterface $current, $options = array())
+    public function renderBreadcrumbs(ItemInterface $current, $options = array())
     {
         $this->ensureTemplate();
 
@@ -119,7 +119,7 @@ class NavigationExtension extends \Twig_Extension
         return new MenuRenderer($iterator, $template, $options);
     }
 
-    protected function createBreadcrumbIterator(ContainerInterface $current)
+    protected function createBreadcrumbIterator(ItemInterface $current)
     {
         return new BreadcrumbIterator($current);
     }

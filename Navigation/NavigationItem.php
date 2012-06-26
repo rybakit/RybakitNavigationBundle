@@ -2,7 +2,7 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Navigation;
 
-class NavigationItem extends AbstractContainer
+class NavigationItem extends AbstractItem
 {
     /**
      * @var string

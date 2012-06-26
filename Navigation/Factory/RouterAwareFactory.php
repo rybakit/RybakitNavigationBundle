@@ -2,7 +2,7 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Navigation\Factory;
 
-use Rybakit\Bundle\NavigationBundle\Navigation\ContainerInterface;
+use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RouterAwareFactory implements FactoryInterface
@@ -39,7 +39,7 @@ class RouterAwareFactory implements FactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function create(array $options = array(), ContainerInterface $parent = null)
+    public function create(array $options = array(), ItemInterface $parent = null)
     {
         if (!empty($options['route'])) {
             $parameters = empty($options['route_params']) ? array() : $options['route_params'];
