@@ -64,7 +64,7 @@ class NavigationExtension extends \Twig_Extension
     /**
      * @param string $navName
      *
-     * @return ItemInterface
+     * @return ItemInterface|null
      */
     public function getCurrent($navName)
     {
@@ -120,7 +120,11 @@ class NavigationExtension extends \Twig_Extension
             $options = array('last' => $options);
         }
 
-        $items = $this->createBreadcrumbIterator($this->getCurrent($navName));
+        if (!$current = $this->getCurrent($navName)) {
+            return '';
+        }
+
+        $items = $this->createBreadcrumbIterator($current);
 
         return $this->template->renderBlock('breadcrumbs', array(
             'items'   => $items,
