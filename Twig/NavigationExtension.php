@@ -2,6 +2,7 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Twig;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 use Rybakit\Bundle\NavigationBundle\Navigation\NavigationItem;
 use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\RecursiveItemIterator;
@@ -10,6 +11,11 @@ use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\BreadcrumbIterator;
 
 class NavigationExtension extends \Twig_Extension
 {
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
     /**
      * @var \Twig_Environment
      */
@@ -21,10 +27,17 @@ class NavigationExtension extends \Twig_Extension
     protected $template;
 
     /**
+     * @var ItemInterface[]
+     */
+    protected static $current = array();
+
+    /**
+     * @param ContainerInterface $container
      * @param \Twig_Template|string $template
      */
-    public function __construct($template)
+    public function __construct(ContainerInterface $container, $template)
     {
+        $this->container = $container;
         $this->template = $template;
     }
 
@@ -42,24 +55,40 @@ class NavigationExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
+            'nav_current'     => new \Twig_Function_Method($this, 'getCurrent', array('is_safe' => array('html'))),
             'nav_menu'        => new \Twig_Function_Method($this, 'renderMenu', array('is_safe' => array('html'))),
             'nav_breadcrumbs' => new \Twig_Function_Method($this, 'renderBreadcrumbs', array('is_safe' => array('html'))),
         );
     }
 
     /**
+     * @param string $navName
+     *
+     * @return ItemInterface
+     */
+    public function getCurrent($navName)
+    {
+        if (!array_key_exists($navName, static::$current)) {
+            static::$current[$navName] = $this->container->get($navName)->getCurrent();
+        }
+
+        return static::$current[$navName];
+    }
+
+    /**
      * Renders a menu.
      *
-     * @param ItemInterface $root
-     * @param array         $options
+     * @param string $navName
+     * @param array  $options
      *
      * @return string
      */
-    public function renderMenu(ItemInterface $root, array $options = array())
+    public function renderMenu($navName, array $options = array())
     {
         $this->ensureTemplate();
 
-        $iterator = new RecursiveItemIterator($root);
+        $item = $this->container->get($navName);
+        $iterator = new RecursiveItemIterator($item);
 
         if (!empty($options['visible_only']) && $options['visible_only']) {
             $iterator = new RecursiveCallbackFilterIterator($iterator, function($current) {
@@ -78,12 +107,12 @@ class NavigationExtension extends \Twig_Extension
     /**
      * Renders a breadcrumbs.
      *
-     * @param ItemInterface $current
-     * @param mixed         $options
+     * @param string $navName
+     * @param mixed  $options
      *
      * @return string
      */
-    public function renderBreadcrumbs(ItemInterface $current, $options = array())
+    public function renderBreadcrumbs($navName, $options = array())
     {
         $this->ensureTemplate();
 
@@ -91,7 +120,7 @@ class NavigationExtension extends \Twig_Extension
             $options = array('last' => $options);
         }
 
-        $items = $this->createBreadcrumbIterator($current);
+        $items = $this->createBreadcrumbIterator($this->getCurrent($navName));
 
         return $this->template->renderBlock('breadcrumbs', array(
             'items'   => $items,
