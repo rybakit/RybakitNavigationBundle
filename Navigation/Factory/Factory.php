@@ -18,6 +18,11 @@ class Factory implements FactoryInterface
     protected $parent;
 
     /**
+     * @var array
+     */
+    protected $meta = array();
+
+    /**
      * @param ItemInterface|null $itemPrototype
      */
     public function __construct(ItemInterface $itemPrototype = null)
@@ -81,25 +86,21 @@ class Factory implements FactoryInterface
      */
     protected function bindOption(ItemInterface $item, $option, $value)
     {
-        static $cache = array();
-
-        $className = get_class($item);
-
-        if (!isset($cache[$className][$option])) {
+        if (!isset($this->meta[$option])) {
             $normalizedName = static::normalizeOptionName($option);
             $method = 'set'.$normalizedName;
 
             if (method_exists($item, $method)) {
-                $cache[$className][$option]['method'] = $method;
+                $this->meta[$option]['method'] = $method;
             } else {
-                $cache[$className][$option]['property'] = lcfirst($normalizedName);
+                $this->meta[$option]['property'] = lcfirst($normalizedName);
             }
         }
 
-        if (isset($cache[$className][$option]['method'])) {
-            $item->{$cache[$className][$option]['method']}($value);
+        if (isset($this->meta[$option]['method'])) {
+            $item->{$this->meta[$option]['method']}($value);
         } else {
-            $item->{$cache[$className][$option]['property']} = $value;
+            $item->{$this->meta[$option]['property']} = $value;
         }
     }
 
