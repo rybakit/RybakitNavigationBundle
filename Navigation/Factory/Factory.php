@@ -78,22 +78,28 @@ class Factory implements FactoryInterface
      * @param ItemInterface $item
      * @param string        $option
      * @param mixed         $value
-     *
-     * @throws \InvalidArgumentException
      */
     protected function bindOption(ItemInterface $item, $option, $value)
     {
-        if (!is_string($option) || empty($option)) {
-            throw new \InvalidArgumentException('Option name must be a non-empty string.');
+        static $cache = array();
+
+        $className = get_class($item);
+
+        if (!isset($cache[$className][$option])) {
+            $normalizedName = static::normalizeOptionName($option);
+            $method = 'set'.$normalizedName;
+
+            if (method_exists($item, $method)) {
+                $cache[$className][$option]['method'] = $method;
+            } else {
+                $cache[$className][$option]['property'] = lcfirst($normalizedName);
+            }
         }
 
-        $normalizedName = static::normalizeOptionName($option);
-        $method = 'set'.$normalizedName;
-
-        if (method_exists($item, $method)) {
-            $item->$method($value);
+        if (isset($cache[$className][$option]['method'])) {
+            $item->{$cache[$className][$option]['method']}($value);
         } else {
-            $item->{lcfirst($normalizedName)} = $value;
+            $item->{$cache[$className][$option]['property']} = $value;
         }
     }
 

@@ -44,15 +44,9 @@ class NavigationItem extends AbstractItem
      * @param string $label
      *
      * @return NavigationItem
-     *
-     * @throws \InvalidArgumentException
      */
     public function setLabel($label)
     {
-        if (null !== $label && !is_string($label)) {
-            throw new \InvalidArgumentException('Label must be a string or null.');
-        }
-
         $this->label = $label;
 
         return $this;
@@ -70,15 +64,9 @@ class NavigationItem extends AbstractItem
      * @param string $uri
      *
      * @return NavigationItem
-     *
-     * @throws \InvalidArgumentException
      */
     public function setUri($uri)
     {
-        if (null !== $uri && !is_string($uri)) {
-            throw new \InvalidArgumentException('Uri must be a string or null.');
-        }
-
         $this->uri = $uri;
 
         return $this;
