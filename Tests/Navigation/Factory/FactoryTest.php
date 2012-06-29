@@ -10,12 +10,24 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreate()
     {
         $factory = new Factory(new NavigationItem());
+
         $nav = $factory->create(array(
             'label'     => '0',
             'children'  => array(
-                array('label' => '1.1'),
-                array('label' => '1.2', 'children' => array(array('label' => '1.2.1'))),
-                array('label' => '1.3'),
+                array(
+                    'label' => '1.1',
+                ),
+                array(
+                    'label'     => '1.2',
+                    'children'  => array(
+                        array(
+                            'label' => '1.2.1',
+                        ),
+                    ),
+                ),
+                array(
+                    'label' => '1.3',
+                ),
             ),
         ));
 
@@ -27,7 +39,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $dump = '('.$container->getLabel().')';
 
         foreach ($container as $item) {
-            $dump .= $this->dumpContainer($item);
+            $dump .= $this->dumpItem($item);
         }
 
         return $dump;
