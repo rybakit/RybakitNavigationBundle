@@ -9,3 +9,7 @@ spl_autoload_register(function ($class) {
         }
     }
 });
+
+if (file_exists($loader = __DIR__.'/../vendor/autoload.php')) {
+    require_once $loader;
+}
