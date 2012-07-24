@@ -42,10 +42,8 @@ class RouterAwareFactory implements FactoryInterface
     public function create(array $options = array(), ItemInterface $parent = null)
     {
         if (!empty($options['route'])) {
-            $parameters = empty($options['route_params']) ? array() : $options['route_params'];
-            $absolute = empty($options['route_absolute']) ? false : $options['route_absolute'];
-
-            $options['uri'] = $this->generator->generate($options['route'], $parameters, $absolute);
+            $route = (array) $options['route'] + array('', array(), false);
+            $options['uri'] = $this->generator->generate($route[0], $route[1], $route[2]);
         }
 
         return $this->factory->create($options, $parent);
