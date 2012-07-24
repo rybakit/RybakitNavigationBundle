@@ -11,7 +11,7 @@ interface FactoryInterface
      *
      * @throws \InvalidArgumentException
      */
-    function setParent(FactoryInterface $parent);
+    public function setParent(FactoryInterface $parent);
 
     /**
      * @param array              $options
@@ -19,5 +19,5 @@ interface FactoryInterface
      *
      * @return ItemInterface
      */
-    function create(array $options = array(), ItemInterface $parent = null);
+    public function create(array $options = array(), ItemInterface $parent = null);
 }

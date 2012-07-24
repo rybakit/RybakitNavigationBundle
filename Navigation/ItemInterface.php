@@ -11,12 +11,12 @@ interface ItemInterface extends \IteratorAggregate
      *
      * @throws \InvalidArgumentException
      */
-    function setParent(ItemInterface $parent = null);
+    public function setParent(ItemInterface $parent = null);
 
     /**
      * @return ItemInterface|null
      */
-    function getParent();
+    public function getParent();
 
     /**
      * @param ItemInterface $item
@@ -25,19 +25,19 @@ interface ItemInterface extends \IteratorAggregate
      *
      * @throws \InvalidArgumentException
      */
-    function add(ItemInterface $item);
+    public function add(ItemInterface $item);
 
     /**
      * @param ItemInterface $item
      *
      * @return ItemInterface
      */
-    function remove(ItemInterface $item);
+    public function remove(ItemInterface $item);
 
     /**
      * @param ItemInterface $item
      *
      * @return bool
      */
-    function has(ItemInterface $item);
+    public function has(ItemInterface $item);
 }
