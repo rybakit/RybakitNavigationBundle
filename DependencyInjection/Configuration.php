@@ -15,7 +15,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('rybakit_nav')
+        $treeBuilder->root('rybakit_navigation')
             ->children()
                 ->arrayNode('twig')
                 ->addDefaultsIfNotSet()
