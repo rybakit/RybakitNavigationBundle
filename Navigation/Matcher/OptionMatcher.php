@@ -2,7 +2,7 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Navigation\Matcher;
 
-class SingleOptionMatcher implements MatcherInterface
+class OptionMatcher implements MatcherInterface
 {
     /**
      * @var string An option name
