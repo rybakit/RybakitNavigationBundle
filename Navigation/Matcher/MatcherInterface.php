@@ -9,5 +9,5 @@ interface MatcherInterface
      *
      * @return bool
      */
-    function match($value);
+    public function match($value);
 }
