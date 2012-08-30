@@ -85,9 +85,10 @@ class NavigationExtension extends \Twig_Extension
      */
     public function renderMenu($navName, array $options = array())
     {
-        $this->ensureTemplate();
+        if (!$item = $this->container->get($navName)) {
+            return '';
+        }
 
-        $item = $this->container->get($navName);
         $iterator = new RecursiveItemIterator($item);
 
         if (!empty($options['visible_only']) && $options['visible_only']) {
@@ -98,7 +99,7 @@ class NavigationExtension extends \Twig_Extension
 
         $renderer = $this->createMenuRenderer($iterator, $this->template, $options);
 
-        return $this->template->renderBlock('menu', array(
+        return $this->getTemplate()->renderBlock('menu', array(
             'items'   => $renderer->render(),
             'options' => $options,
         ));
@@ -114,8 +115,6 @@ class NavigationExtension extends \Twig_Extension
      */
     public function renderBreadcrumbs($navName, $options = array())
     {
-        $this->ensureTemplate();
-
         if (!is_array($options)) {
             $options = array('last' => $options);
         }
@@ -126,7 +125,7 @@ class NavigationExtension extends \Twig_Extension
 
         $items = $this->createBreadcrumbIterator($current);
 
-        return $this->template->renderBlock('breadcrumbs', array(
+        return $this->getTemplate()->renderBlock('breadcrumbs', array(
             'items'   => $items,
             'options' => $options,
         ));
@@ -140,11 +139,13 @@ class NavigationExtension extends \Twig_Extension
         return 'rybakit_navigation';
     }
 
-    protected function ensureTemplate()
+    protected function getTemplate()
     {
         if (!$this->template instanceof \Twig_Template) {
             $this->template = $this->environment->loadTemplate($this->template);
         }
+
+        return $this->template;
     }
 
     protected function createMenuRenderer(\Traversable $iterator, \Twig_Template $template, array $options = array())
