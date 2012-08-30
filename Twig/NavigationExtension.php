@@ -115,10 +115,6 @@ class NavigationExtension extends \Twig_Extension
      */
     public function renderBreadcrumbs($navName, $options = array())
     {
-        if (!is_array($options)) {
-            $options = array('last' => $options);
-        }
-
         if (!$current = $this->getCurrent($navName)) {
             return '';
         }
@@ -127,7 +123,7 @@ class NavigationExtension extends \Twig_Extension
 
         return $this->getTemplate()->renderBlock('breadcrumbs', array(
             'items'   => $items,
-            'options' => $options,
+            'options' => is_string($options) ? array('last' => $options) : $options,
         ));
     }
 
