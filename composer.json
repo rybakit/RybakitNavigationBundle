@@ -18,5 +18,6 @@
             "Rybakit\\Bundle\\NavigationBundle": ""
         }
     },
-    "target-dir": "Rybakit/Bundle/NavigationBundle" 
+    "target-dir": "Rybakit/Bundle/NavigationBundle",
+    "minimum-stability": "dev"
 }
