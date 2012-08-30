@@ -97,7 +97,7 @@ class NavigationExtension extends \Twig_Extension
             });
         }
 
-        $renderer = $this->createMenuRenderer($iterator, $this->template, $options);
+        $renderer = $this->createMenuRenderer($iterator, $this->getTemplate(), $options);
 
         return $this->getTemplate()->renderBlock('menu', array(
             'items'   => $renderer->render(),
