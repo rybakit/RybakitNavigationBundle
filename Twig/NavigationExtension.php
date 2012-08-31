@@ -101,8 +101,8 @@ class NavigationExtension extends \Twig_Extension
     /**
      * Renders a breadcrumbs block.
      *
-     * @param string       $navName
-     * @param array|string $options
+     * @param string $navName
+     * @param mixed  $options
      *
      * @return string
      */
@@ -112,8 +112,8 @@ class NavigationExtension extends \Twig_Extension
             return '';
         }
 
-        if (is_string($options)) {
-            $options = array('last' => $options);
+        if (!is_array($options)) {
+            $options = array('last' => (string) $options);
         }
 
         $options += array('block' => 'breadcrumbs');
