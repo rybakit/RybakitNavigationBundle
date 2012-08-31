@@ -2,14 +2,14 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Tests\Navigation\Factory;
 
-use Rybakit\Bundle\NavigationBundle\Navigation\Factory\Factory;
+use Rybakit\Bundle\NavigationBundle\Navigation\Factory\ItemFactory;
 use Rybakit\Bundle\NavigationBundle\Navigation\NavigationItem;
 
-class FactoryTest extends \PHPUnit_Framework_TestCase
+class ItemFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreate()
     {
-        $factory = new Factory(new NavigationItem());
+        $factory = new ItemFactory(null, new NavigationItem());
 
         $nav = $factory->create(array(
             'label'     => '0',
@@ -32,6 +32,19 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         ));
 
         $this->assertEquals('(0)(1.1)(1.2)(1.2.1)(1.3)', $this->dumpItem($nav));
+    }
+
+    public function testFilter()
+    {
+        $filter = $this->getMock('Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterInterface');
+        $filter->expects($this->once())->method('filter')
+            ->with($this->equalTo(array('label' => 'root')))
+            ->will($this->returnValue(array('label' => '*root*')));
+
+        $factory = new ItemFactory($filter, new NavigationItem());
+        $root = $factory->create(array('label' => 'root'));
+
+        $this->assertEquals('*root*', $root->getLabel());
     }
 
     protected function dumpItem(NavigationItem $container)

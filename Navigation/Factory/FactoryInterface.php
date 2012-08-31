@@ -7,13 +7,6 @@ use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 interface FactoryInterface
 {
     /**
-     * @param FactoryInterface $parent
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function setParent(FactoryInterface $parent);
-
-    /**
      * @param array              $options
      * @param ItemInterface|null $parent
      *
