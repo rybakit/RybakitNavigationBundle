@@ -55,9 +55,9 @@ class NavigationExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'nav_current'     => new \Twig_Function_Method($this, 'getCurrent', array('is_safe' => array('html'))),
-            'nav_menu'        => new \Twig_Function_Method($this, 'renderMenu', array('is_safe' => array('html'))),
+            'nav'             => new \Twig_Function_Method($this, 'render', array('is_safe' => array('html'))),
             'nav_breadcrumbs' => new \Twig_Function_Method($this, 'renderBreadcrumbs', array('is_safe' => array('html'))),
+            'nav_current'     => new \Twig_Function_Method($this, 'getCurrent', array('is_safe' => array('html'))),
         );
     }
 
@@ -76,40 +76,33 @@ class NavigationExtension extends \Twig_Extension
     }
 
     /**
-     * Renders a menu.
+     * Renders a navigation block.
      *
      * @param string $navName
      * @param array  $options
      *
      * @return string
      */
-    public function renderMenu($navName, array $options = array())
+    public function render($navName, array $options = array())
     {
-        if (!$item = $this->container->get($navName)) {
+        if (!$root = $this->container->get($navName)) {
             return '';
         }
 
-        $iterator = new RecursiveItemIterator($item);
+        $options += array('block' => 'nav');
+        $items = $this->createNavigationIterator($root, $options);
 
-        if (!empty($options['visible_only']) && $options['visible_only']) {
-            $iterator = new RecursiveCallbackFilterIterator($iterator, function($current) {
-                return !$current instanceof NavigationItem || $current->isVisible();
-            });
-        }
-
-        $renderer = $this->createMenuRenderer($iterator, $this->getTemplate(), $options);
-
-        return $this->getTemplate()->renderBlock('menu', array(
-            'items'   => $renderer->render(),
+        return $this->getTemplate()->renderBlock($options['block'], array(
+            'items'   => $items,
             'options' => $options,
         ));
     }
 
     /**
-     * Renders a breadcrumbs.
+     * Renders a breadcrumbs block.
      *
-     * @param string $navName
-     * @param mixed  $options
+     * @param string       $navName
+     * @param array|string $options
      *
      * @return string
      */
@@ -119,11 +112,16 @@ class NavigationExtension extends \Twig_Extension
             return '';
         }
 
-        $items = $this->createBreadcrumbIterator($current);
+        if (is_string($options)) {
+            $options = array('last' => $options);
+        }
 
-        return $this->getTemplate()->renderBlock('breadcrumbs', array(
+        $options += array('block' => 'breadcrumbs');
+        $items = $this->createBreadcrumbIterator($current, $options);
+
+        return $this->getTemplate()->renderBlock($options['block'], array(
             'items'   => $items,
-            'options' => is_string($options) ? array('last' => $options) : $options,
+            'options' => $options,
         ));
     }
 
@@ -135,6 +133,39 @@ class NavigationExtension extends \Twig_Extension
         return 'rybakit_navigation';
     }
 
+    protected function createNavigationIterator(ItemInterface $root, array $options = array())
+    {
+        $filter = null;
+
+        if (isset($options['depth'])) {
+            $depth  = (int) $options['depth'] + 1;
+            $filter = function(NavigationItem $current) use ($depth) {
+                return $current->getLevel() <= $depth;
+            };
+        }
+
+        if (!empty($options['visible_only']) && $options['visible_only']) {
+            $filter = function(NavigationItem $current) use ($filter) {
+                return $filter($current) && $current->isVisible();
+            };
+        }
+
+        $iterator = new RecursiveItemIterator($root);
+
+        if ($filter) {
+            $iterator = new RecursiveCallbackFilterIterator($iterator, function($current) use ($filter) {
+                return $current instanceof NavigationItem && $filter($current);
+            });
+        }
+
+        return $iterator;
+    }
+
+    protected function createBreadcrumbIterator(ItemInterface $current, array $options = array())
+    {
+        return new BreadcrumbIterator($current);
+    }
+
     protected function getTemplate()
     {
         if (!$this->template instanceof \Twig_Template) {
@@ -142,15 +173,5 @@ class NavigationExtension extends \Twig_Extension
         }
 
         return $this->template;
-    }
-
-    protected function createMenuRenderer(\Traversable $iterator, \Twig_Template $template, array $options = array())
-    {
-        return new MenuRenderer($iterator, $template, $options);
-    }
-
-    protected function createBreadcrumbIterator(ItemInterface $current)
-    {
-        return new BreadcrumbIterator($current);
     }
 }

@@ -1,0 +1,61 @@
+{% block nav %}
+{% spaceless %}
+    <ul class="nav">{{ block('nav_items') }}</ul>
+{% endspaceless %}
+{% endblock %}
+
+{% block nav_items %}
+{% spaceless %}
+    {% for item in items %}
+        {{ block(items.hasChildren ? 'nav_item_children' : 'nav_item') }}
+    {% endfor %}
+{% endspaceless %}
+{% endblock %}
+
+{% block nav_item %}
+{% spaceless %}
+    <li{% if item.active %} class="active"{% endif %}>
+        <a href="{{ item.uri }}">{{ block('label') }}</a>
+    </li>
+{% endspaceless %}
+{% endblock %}
+
+{% block nav_item_children %}
+{% spaceless %}
+<li class="dropdown{% if item.active %} active{% endif %}">
+    <a href="{{ item.uri }}" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
+        {{ block('label') }} <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+        {% set items = items.getChildren %}
+        {{ block('nav_items') }}
+    </ul>
+</li>
+{% endspaceless %}
+{% endblock %}
+
+{% block breadcrumbs %}
+{% spaceless %}
+    <ul class="breadcrumb">
+        {% for item in items|reverse %}
+            <li>
+                {% if loop.last and options.last is not defined %}
+                    {{ block('label') }}
+                {% else %}
+                    <a href="{{ item.uri }}">{{ block('label') }}</a>
+                    <span class="divider">/</span>
+                {% endif %}
+            </li>
+        {% endfor %}
+        {% if options.last is defined %}
+            <li>{{ options.last }}</li>
+        {% endif %}
+    </ul>
+{% endspaceless %}
+{% endblock %}
+
+{% block label %}
+{% spaceless %}
+    {{ item.label|trans(item.transParams|default({}), item.transDomain|default(null)) }}
+{% endspaceless %}
+{% endblock %}

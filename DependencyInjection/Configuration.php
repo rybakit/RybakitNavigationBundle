@@ -22,7 +22,7 @@ class Configuration implements ConfigurationInterface
                 ->canBeUnset()
                 ->children()
                     ->scalarNode('template')
-                        ->defaultValue('navigation.html.twig')
+                        ->defaultValue('bootstrap.html.twig')
                     ->end()
                 ->end()
             ->end()
