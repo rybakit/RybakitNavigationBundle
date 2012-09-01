@@ -2,9 +2,9 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Navigation\Factory;
 
-use Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterInterface;
 use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 use Rybakit\Bundle\NavigationBundle\Navigation\NavigationItem;
+use Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterInterface;
 
 class ItemFactory implements FactoryInterface
 {
