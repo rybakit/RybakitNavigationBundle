@@ -1,8 +1,8 @@
 <?php
 
-namespace Rybakit\Bundle\NavigationBundle\Tests\Navigation\Factory;
+namespace Rybakit\Bundle\NavigationBundle\Tests\Navigation;
 
-use Rybakit\Bundle\NavigationBundle\Navigation\Factory\ItemFactory;
+use Rybakit\Bundle\NavigationBundle\Navigation\ItemFactory;
 use Rybakit\Bundle\NavigationBundle\Navigation\NavigationItem;
 
 class ItemFactoryTest extends \PHPUnit_Framework_TestCase
@@ -37,7 +37,7 @@ class ItemFactoryTest extends \PHPUnit_Framework_TestCase
     public function testFilter()
     {
         $filter = $this->getMock('Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterInterface');
-        $filter->expects($this->once())->method('filter')
+        $filter->expects($this->once())->method('apply')
             ->with($this->equalTo(array('label' => 'root')))
             ->will($this->returnValue(array('label' => '*root*')));
 

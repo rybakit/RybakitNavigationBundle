@@ -1,12 +1,10 @@
 <?php
 
-namespace Rybakit\Bundle\NavigationBundle\Navigation\Factory;
+namespace Rybakit\Bundle\NavigationBundle\Navigation;
 
-use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
-use Rybakit\Bundle\NavigationBundle\Navigation\NavigationItem;
 use Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterInterface;
 
-class ItemFactory implements FactoryInterface
+class ItemFactory
 {
     /**
      * @var FilterInterface
@@ -65,7 +63,7 @@ class ItemFactory implements FactoryInterface
         }
 
         if ($this->filter) {
-            $options = $this->filter->filter($options);
+            $options = $this->filter->apply($options);
         }
 
         foreach ($options as $key => $value) {

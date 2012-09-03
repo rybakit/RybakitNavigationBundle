@@ -1,67 +1,53 @@
 <?php
 
-namespace Rybakit\Bundle\NavigationBundle\Tests\Navigation\Factory;
+namespace Rybakit\Bundle\NavigationBundle\Tests\Navigation\Filter;
 
-use Rybakit\Bundle\NavigationBundle\Navigation\Filter\ActiveFilter;
+use Rybakit\Bundle\NavigationBundle\Navigation\Filter\UrlFilter;
 
 class UrlFilterTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testCreateUsingRouteName()
+    public function testApplyForRouteName()
     {
-        /*
-        $generator = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
-        $generator->expects($this->once())->method('generate')
-            ->with($this->equalTo('route_name'))
-            ->will($this->returnValue('generated_uri'));
+        $urlGenerator = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
+        $urlGenerator->expects($this->once())->method('generate')
+            ->with($this->equalTo('my_route'))
+            ->will($this->returnValue('generated_url'));
 
-        $factory = $this->getMock('Rybakit\Bundle\NavigationBundle\Navigation\Factory\FactoryInterface');
-        $factory->expects($this->once())->method('create')
-            ->with($this->equalTo(array(
-                'route' => 'route_name',
-                'uri'   => 'generated_uri',
-            )));
+        $filter = new UrlFilter($urlGenerator);
+        $result = $filter->apply(array('route' => 'my_route'));
 
-        $routerAwareFactory = new RouterAwareFactory($generator, $factory);
-        $routerAwareFactory->create(array('route' => 'route_name'));
-        */
+        $this->assertEquals(array('route' => 'my_route', 'uri' => 'generated_url'), $result);
     }
 
-    /*
-    public function testCreateUsingRouteNameAndParameters()
+    public function testApplyForRouteNameAndParameters()
     {
-        $generator = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
-        $generator->expects($this->once())->method('generate')
-            ->with($this->equalTo('route_name'), $this->equalTo(array('param' => 'value')))
-            ->will($this->returnValue('generated_uri_based_on_parameters'));
+        $urlGenerator = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
+        $urlGenerator->expects($this->once())->method('generate')
+            ->with($this->equalTo('my_route'), $this->equalTo(array('param' => 'value')))
+            ->will($this->returnValue('generated_url'));
 
-        $factory = $this->getMock('Rybakit\Bundle\NavigationBundle\Navigation\Factory\FactoryInterface');
-        $factory->expects($this->once())->method('create')
-            ->with($this->equalTo(array(
-                'route' => array('route_name', array('param' => 'value')),
-                'uri'   => 'generated_uri_based_on_parameters',
-            )));
+        $filter = new UrlFilter($urlGenerator);
+        $result = $filter->apply(array('route' => array('my_route', array('param' => 'value'))));
 
-        $routerAwareFactory = new RouterAwareFactory($generator, $factory);
-        $routerAwareFactory->create(array('route' => array('route_name', array('param' => 'value'))));
+        $this->assertEquals(array(
+            'route' => array('my_route', array('param' => 'value')),
+            'uri'   => 'generated_url',
+        ), $result);
     }
 
-    public function testCreateUsingRouteNameAndAbsoluteFlag()
+    public function testApplyForRouteNameAndAbsoluteFlag()
     {
-        $generator = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
-        $generator->expects($this->once())->method('generate')
-            ->with($this->equalTo('route_name'), $this->equalTo(array()), $this->equalTo(true))
-            ->will($this->returnValue('generated_absolute_uri'));
+        $urlGenerator = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
+        $urlGenerator->expects($this->once())->method('generate')
+            ->with($this->equalTo('my_route'), $this->equalTo(array()), $this->equalTo(true))
+            ->will($this->returnValue('generated_url'));
 
-        $factory = $this->getMock('Rybakit\Bundle\NavigationBundle\Navigation\Factory\FactoryInterface');
-        $factory->expects($this->once())->method('create')
-            ->with($this->equalTo(array(
-                'route' => array('route_name', array(), true),
-                'uri'   => 'generated_absolute_uri',
-            )));
+        $filter = new UrlFilter($urlGenerator);
+        $result = $filter->apply(array('route' => array('my_route', array(), true)));
 
-        $routerAwareFactory = new RouterAwareFactory($generator, $factory);
-        $routerAwareFactory->create(array('route' => array('route_name', array(), true)));
+        $this->assertEquals(array(
+            'route' => array('my_route', array(), true),
+            'uri'   => 'generated_url',
+        ), $result);
     }
-    */
 }
