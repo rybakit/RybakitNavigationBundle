@@ -1,6 +1,6 @@
 <?php
 
-namespace Rybakit\Bundle\NavigationBundle\Navigation\Matcher;
+namespace Rybakit\Bundle\NavigationBundle\Navigation\Filter\Matcher;
 
 class CallbackMatcher implements MatcherInterface
 {

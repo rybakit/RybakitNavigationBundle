@@ -1,21 +1,20 @@
 <?php
 
-namespace Rybakit\Bundle\NavigationBundle\Navigation\Factory;
+namespace Rybakit\Bundle\NavigationBundle\Navigation;
 
-use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
-use Rybakit\Bundle\NavigationBundle\Navigation\NavigationItem;
+use Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterInterface;
 
-class Factory implements FactoryInterface
+class ItemFactory
 {
+    /**
+     * @var FilterInterface
+     */
+    protected $filter;
+
     /**
      * @var ItemInterface
      */
     protected $itemPrototype;
-
-    /**
-     * @var FactoryInterface
-     */
-    protected $parent;
 
     /**
      * @var array
@@ -23,23 +22,13 @@ class Factory implements FactoryInterface
     protected $meta = array();
 
     /**
-     * @param ItemInterface|null $itemPrototype
+     * @param FilterInterface|null $filter
+     * @param ItemInterface|null   $itemPrototype
      */
-    public function __construct(ItemInterface $itemPrototype = null)
+    public function __construct(FilterInterface $filter = null, ItemInterface $itemPrototype = null)
     {
+        $this->filter = $filter;
         $this->itemPrototype = $itemPrototype ?: new NavigationItem();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setParent(FactoryInterface $parent)
-    {
-        if ($parent === $this) {
-            throw new \InvalidArgumentException('A factory cannot have itself as a parent.');
-        }
-
-        $this->parent = $parent;
     }
 
     /**
@@ -67,15 +56,18 @@ class Factory implements FactoryInterface
         $children = empty($options['children']) ? array() : $options['children'];
         unset($options['children']);
 
-        foreach ($options as $key => $value) {
-            $this->bindOption($item, $key, $value);
+        if ($children) {
+            foreach ($children as $childOptions) {
+                $this->create($childOptions, $item);
+            }
         }
 
-        if ($children) {
-            $factory = $this->parent ?: $this;
-            foreach ($children as $childOptions) {
-                $factory->create($childOptions, $item);
-            }
+        if ($this->filter) {
+            $options = $this->filter->apply($options);
+        }
+
+        foreach ($options as $key => $value) {
+            $this->bindOption($item, $key, $value);
         }
     }
 
