@@ -40,4 +40,18 @@ interface ItemInterface extends \IteratorAggregate
      * @return bool
      */
     public function has(ItemInterface $item);
+
+    /**
+     * @param string $name
+     * @param mixed  $value
+     */
+    public function setAttribute($name, $value);
+
+    /**
+     * @param string $name
+     * @param mixed  $default
+     *
+     * @return mixed
+     */
+    public function getAttribute($name, $default = null);
 }

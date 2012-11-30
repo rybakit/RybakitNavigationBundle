@@ -19,7 +19,7 @@ class ItemFactory
     /**
      * @var array
      */
-    protected $meta = array();
+    protected $cache = array();
 
     /**
      * @param FilterInterface|null $filter
@@ -78,21 +78,17 @@ class ItemFactory
      */
     protected function bindOption(ItemInterface $item, $option, $value)
     {
-        if (!isset($this->meta[$option])) {
-            $normalizedName = static::normalizeOptionName($option);
-            $method = 'set'.$normalizedName;
+        $class = get_class($item);
 
-            if (method_exists($item, $method)) {
-                $this->meta[$option]['method'] = $method;
-            } else {
-                $this->meta[$option]['property'] = lcfirst($normalizedName);
-            }
+        if (!isset($this->cache[$class][$option])) {
+            $method = 'set'.static::normalizeOptionName($option);
+            $this->cache[$class][$option] = is_callable(array($item, $method)) ? $method : false;
         }
 
-        if (isset($this->meta[$option]['method'])) {
-            $item->{$this->meta[$option]['method']}($value);
+        if (false !== $this->cache[$class][$option]) {
+            $item->{$this->cache[$class][$option]}($value);
         } else {
-            $item->{$this->meta[$option]['property']} = $value;
+            $item->setAttribute($option, $value);
         }
     }
 
