@@ -2,16 +2,16 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Tests\Navigation;
 
-use Rybakit\Bundle\NavigationBundle\Navigation\NavigationItem;
+use Rybakit\Bundle\NavigationBundle\Navigation\Item;
 
-class NavigationItemTest extends \PHPUnit_Framework_TestCase
+class ItemTest extends \PHPUnit_Framework_TestCase
 {
     public function testClone()
     {
-        $item0   = new NavigationItem('0');
-        $item11  = new NavigationItem('1.1');
-        $item12  = new NavigationItem('1.2');
-        $item121 = new NavigationItem('1.2.1');
+        $item0   = new Item('0');
+        $item11  = new Item('1.1');
+        $item12  = new Item('1.2');
+        $item121 = new Item('1.2.1');
 
         $item0->add($item11);
         $item0->add($item12);
@@ -33,7 +33,7 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $this->assertItemCopy($item121, $clone121, $clone12);
     }
 
-    public function assertItemCopy(NavigationItem $original, NavigationItem $clone, NavigationItem $cloneParent = null)
+    public function assertItemCopy(Item $original, Item $clone, Item $cloneParent = null)
     {
         $this->assertNotSame($original, $clone);
         $this->assertEquals($original->getLabel(), $clone->getLabel());

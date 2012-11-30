@@ -28,7 +28,7 @@ class ItemFactory
     public function __construct(FilterInterface $filter = null, ItemInterface $itemPrototype = null)
     {
         $this->filter = $filter;
-        $this->itemPrototype = $itemPrototype ?: new NavigationItem();
+        $this->itemPrototype = $itemPrototype ?: new Item();
     }
 
     /**
