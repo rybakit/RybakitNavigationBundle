@@ -2,14 +2,14 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Tests\Navigation;
 
+use Rybakit\Bundle\NavigationBundle\Navigation\Item;
 use Rybakit\Bundle\NavigationBundle\Navigation\ItemFactory;
-use Rybakit\Bundle\NavigationBundle\Navigation\NavigationItem;
 
 class ItemFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreate()
     {
-        $factory = new ItemFactory(null, new NavigationItem());
+        $factory = new ItemFactory(null, new Item());
 
         $nav = $factory->create(array(
             'label'     => '0',
@@ -41,13 +41,13 @@ class ItemFactoryTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo(array('label' => 'root')))
             ->will($this->returnValue(array('label' => '*root*')));
 
-        $factory = new ItemFactory($filter, new NavigationItem());
+        $factory = new ItemFactory($filter, new Item());
         $root = $factory->create(array('label' => 'root'));
 
         $this->assertEquals('*root*', $root->getLabel());
     }
 
-    protected function dumpItem(NavigationItem $container)
+    protected function dumpItem(Item $container)
     {
         $dump = '('.$container->getLabel().')';
 

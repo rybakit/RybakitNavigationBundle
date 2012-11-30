@@ -3,11 +3,11 @@
 namespace Rybakit\Bundle\NavigationBundle\Twig;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Rybakit\Bundle\NavigationBundle\Navigation\Item;
 use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
-use Rybakit\Bundle\NavigationBundle\Navigation\NavigationItem;
+use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\BreadcrumbIterator;
 use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\RecursiveItemIterator;
 use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\RecursiveCallbackFilterIterator;
-use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\BreadcrumbIterator;
 
 class NavigationExtension extends \Twig_Extension
 {
@@ -139,13 +139,13 @@ class NavigationExtension extends \Twig_Extension
 
         if (isset($options['depth'])) {
             $depth  = (int) $options['depth'] + 1;
-            $filter = function(NavigationItem $current) use ($depth) {
+            $filter = function(Item $current) use ($depth) {
                 return $current->getLevel() <= $depth;
             };
         }
 
         if (!empty($options['visible_only']) && $options['visible_only']) {
-            $filter = function(NavigationItem $current) use ($filter) {
+            $filter = function(Item $current) use ($filter) {
                 return $filter($current) && $current->isVisible();
             };
         }
@@ -154,7 +154,7 @@ class NavigationExtension extends \Twig_Extension
 
         if ($filter) {
             $iterator = new RecursiveCallbackFilterIterator($iterator, function($current) use ($filter) {
-                return $current instanceof NavigationItem && $filter($current);
+                return $current instanceof Item && $filter($current);
             });
         }
 

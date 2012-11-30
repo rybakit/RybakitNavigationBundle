@@ -2,7 +2,7 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Navigation;
 
-class NavigationItem extends AbstractItem
+class Item extends AbstractItem
 {
     /**
      * @var string
@@ -43,7 +43,7 @@ class NavigationItem extends AbstractItem
     /**
      * @param string $label
      *
-     * @return NavigationItem
+     * @return Item
      */
     public function setLabel($label)
     {
@@ -63,7 +63,7 @@ class NavigationItem extends AbstractItem
     /**
      * @param string $uri
      *
-     * @return NavigationItem
+     * @return Item
      */
     public function setUri($uri)
     {
@@ -83,7 +83,7 @@ class NavigationItem extends AbstractItem
     /**
      * @param bool $active
      *
-     * @return NavigationItem
+     * @return Item
      */
     public function setActive($active = true)
     {
@@ -107,7 +107,7 @@ class NavigationItem extends AbstractItem
     }
 
     /**
-     * @return NavigationItem|null
+     * @return Item|null
      */
     public function getCurrent()
     {
@@ -127,7 +127,7 @@ class NavigationItem extends AbstractItem
     /**
      * @param bool $visible
      *
-     * @return NavigationItem
+     * @return Item
      */
     public function setVisible($visible = true)
     {
