@@ -6,25 +6,31 @@ use Rybakit\Bundle\NavigationBundle\Navigation\Filter\ActiveFilter;
 
 class ActiveFilterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testApplyWhenMatcherReturnsTrue()
+    /**
+     * @dataProvider testApplyProvider
+     */
+    public function testApply($isMatched)
     {
-        $matcher = $this->getMock('Rybakit\Bundle\NavigationBundle\Navigation\Filter\Matcher\MatcherInterface');
+        $item = $this->getMock('\\Rybakit\\Bundle\\NavigationBundle\\Navigation\\ItemInterface');
+
+        $matcher = $this->getMock('\\Rybakit\\Bundle\\NavigationBundle\\Navigation\\Filter\\Matcher\\MatcherInterface');
         $matcher->expects($this->once())->method('match')
-            ->will($this->returnValue(true));
+            ->will($this->returnValue($isMatched));
 
+        $options = array();
         $filter = new ActiveFilter($matcher);
+        $filter->apply($options, $item);
 
-        $this->assertEquals(array('active' => true), $filter->apply(array()));
+        $isMatched
+            ? $this->assertEquals(array('active' => true), $options)
+            : $this->assertEquals(array(), $options);
     }
 
-    public function testApplyWhenMatcherReturnsFalse()
+    public function testApplyProvider()
     {
-        $matcher = $this->getMock('Rybakit\Bundle\NavigationBundle\Navigation\Filter\Matcher\MatcherInterface');
-        $matcher->expects($this->once())->method('match')
-            ->will($this->returnValue(false));
-
-        $filter = new ActiveFilter($matcher);
-
-        $this->assertEquals(array(), $filter->apply(array()));
+        return array(
+            array(true),
+            array(false),
+        );
     }
 }

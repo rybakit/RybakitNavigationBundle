@@ -10,5 +10,5 @@ interface FilterInterface
      * @param array         $options
      * @param ItemInterface $item
      */
-    public function apply(array $options, ItemInterface $item);
+    public function apply(array &$options, ItemInterface $item);
 }

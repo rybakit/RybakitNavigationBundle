@@ -7,12 +7,12 @@ class Item extends AbstractItem
     /**
      * @var string
      */
-    protected $label;
+    public $label;
 
     /**
      * @var string
      */
-    protected $uri;
+    public $uri;
 
     /**
      * @var bool
@@ -33,51 +33,16 @@ class Item extends AbstractItem
         parent::__construct();
 
         if (null !== $label) {
-            $this->setLabel($label);
+            $this->label = $label;
         }
         if (null !== $uri) {
-            $this->setUri($uri);
+            $this->uri = $uri;
         }
     }
 
-    /**
-     * @param string $label
-     *
-     * @return Item
-     */
     public function setLabel($label)
     {
         $this->label = $label;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLabel()
-    {
-        return $this->label;
-    }
-
-    /**
-     * @param string $uri
-     *
-     * @return Item
-     */
-    public function setUri($uri)
-    {
-        $this->uri = $uri;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUri()
-    {
-        return $this->uri;
     }
 
     /**
@@ -89,10 +54,8 @@ class Item extends AbstractItem
     {
         $this->isActive = (bool) $active;
 
-        if ($this->isActive) {
-            if ($this->getParent() instanceof self) {
-                $this->getParent()->setActive();
-            }
+        if ($this->isActive && $parent = $this->getParent() instanceof self) {
+            $parent->setActive();
         }
 
         return $this;
@@ -104,24 +67,6 @@ class Item extends AbstractItem
     public function isActive()
     {
         return $this->isActive;
-    }
-
-    /**
-     * @return Item|null
-     */
-    public function getCurrent()
-    {
-        if ($this->isActive()) {
-            foreach ($this->getIterator() as $item) {
-                if ($item instanceof self && $item->isActive()) {
-                    return $item->getCurrent();
-                }
-            }
-
-            return $this;
-        }
-
-        return null;
     }
 
     /**
@@ -155,6 +100,6 @@ class Item extends AbstractItem
      */
     public function __toString()
     {
-        return $this->label;
+        return $this->label ?: spl_object_hash($this);
     }
 }

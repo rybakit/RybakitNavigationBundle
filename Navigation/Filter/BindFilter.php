@@ -14,7 +14,7 @@ class BindFilter implements FilterInterface
     /**
      * {@inheritdoc}
      */
-    public function apply(array $options, ItemInterface $item)
+    public function apply(array &$options, ItemInterface $item)
     {
         foreach ($options as $key => $value) {
             $this->bindOption($item, $key, $value);
@@ -31,14 +31,27 @@ class BindFilter implements FilterInterface
         $class = get_class($item);
 
         if (!isset($this->cache[$class][$option])) {
-            $method = 'set'.static::normalizeOptionName($option);
-            $this->cache[$class][$option] = is_callable(array($item, $method)) ? $method : false;
+            $normalizedOption = static::normalizeOptionName($option);
+            $methodName = 'set'.$normalizedOption;
+
+            $refl = new \ReflectionClass($class);
+            if ($refl->hasMethod($methodName)) {
+                $method = $refl->getMethod($methodName);
+                if ($method->isPublic() && 1 === $method->getNumberOfRequiredParameters()) {
+                    $this->cache[$class][$option]['method'] = $methodName;
+                }
+            } else {
+                $propertyName = lcfirst($normalizedOption);
+                if ($refl->hasProperty($propertyName) && $refl->getProperty($propertyName)->isPublic()) {
+                    $this->cache[$class][$option]['property'] = $propertyName;
+                }
+            }
         }
 
-        if (false !== $this->cache[$class][$option]) {
-            $item->{$this->cache[$class][$option]}($value);
-        } else {
-            $item->setAttribute($option, $value);
+        if (isset($this->cache[$class][$option]['method'])) {
+            $item->{$this->cache[$class][$option]['method']}($value);
+        } elseif (isset($this->cache[$class][$option]['property'])) {
+            $item->{$this->cache[$class][$option]['property']} = $value;
         }
     }
 

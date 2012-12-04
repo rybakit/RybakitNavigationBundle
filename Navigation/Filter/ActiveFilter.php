@@ -13,32 +13,25 @@ class ActiveFilter implements FilterInterface
     protected $matcher;
 
     /**
-     * @var FilterInterface
-     */
-    protected $parent;
-
-    /**
      * @var bool
      */
     protected $isMatched = false;
 
     /**
-     * @param MatcherInterface     $matcher
-     * @param FilterInterface|null $parent
+     * @param MatcherInterface $matcher
      */
-    public function __construct(MatcherInterface $matcher, FilterInterface $parent = null)
+    public function __construct(MatcherInterface $matcher)
     {
         $this->matcher = $matcher;
-        $this->parent = $parent;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function apply(array $options, ItemInterface $item)
+    public function apply(array &$options, ItemInterface $item)
     {
         if (!$this->isMatched && $this->matcher->match($options)) {
-            $options = $this->doApply($options);
+            $options['active'] = true;
             $this->isMatched = true;
         }
     }

@@ -36,7 +36,7 @@ class ItemTest extends \PHPUnit_Framework_TestCase
     public function assertItemCopy(Item $original, Item $clone, Item $cloneParent = null)
     {
         $this->assertNotSame($original, $clone);
-        $this->assertEquals($original->getLabel(), $clone->getLabel());
+        $this->assertEquals($original->label, $clone->label);
         $this->assertSame($cloneParent, $clone->getParent());
 
         if ($originalParent = $original->getParent()) {
