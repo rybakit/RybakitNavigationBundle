@@ -6,48 +6,32 @@ use Rybakit\Bundle\NavigationBundle\Navigation\Filter\UrlFilter;
 
 class UrlFilterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testApplyForRouteName()
+    /**
+     * @dataProvider testApplyProvider
+     */
+    public function testApply(array $route)
     {
-        $urlGenerator = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
+        $item = $this->getMock('\\Rybakit\\Bundle\\NavigationBundle\\Navigation\\ItemInterface');
+
+        $urlGenerator = $this->getMock('\\Symfony\Component\\Routing\\Generator\\UrlGeneratorInterface');
         $urlGenerator->expects($this->once())->method('generate')
-            ->with($this->equalTo('my_route'))
+            ->with($this->equalTo($route[0]), $this->equalTo($route[1]), $this->equalTo($route[2]))
             ->will($this->returnValue('generated_url'));
 
+        $options = array('route' => $route);
         $filter = new UrlFilter($urlGenerator);
-        $result = $filter->apply(array('route' => 'my_route'));
+        $filter->apply($options, $item);
 
-        $this->assertEquals(array('route' => 'my_route', 'uri' => 'generated_url'), $result);
+        $this->assertEquals(array('route' => $route, 'uri' => 'generated_url'), $options);
     }
 
-    public function testApplyForRouteNameAndParameters()
+    public function testApplyProvider()
     {
-        $urlGenerator = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
-        $urlGenerator->expects($this->once())->method('generate')
-            ->with($this->equalTo('my_route'), $this->equalTo(array('param' => 'value')))
-            ->will($this->returnValue('generated_url'));
-
-        $filter = new UrlFilter($urlGenerator);
-        $result = $filter->apply(array('route' => array('my_route', array('param' => 'value'))));
-
-        $this->assertEquals(array(
-            'route' => array('my_route', array('param' => 'value')),
-            'uri'   => 'generated_url',
-        ), $result);
-    }
-
-    public function testApplyForRouteNameAndAbsoluteFlag()
-    {
-        $urlGenerator = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
-        $urlGenerator->expects($this->once())->method('generate')
-            ->with($this->equalTo('my_route'), $this->equalTo(array()), $this->equalTo(true))
-            ->will($this->returnValue('generated_url'));
-
-        $filter = new UrlFilter($urlGenerator);
-        $result = $filter->apply(array('route' => array('my_route', array(), true)));
-
-        $this->assertEquals(array(
-            'route' => array('my_route', array(), true),
-            'uri'   => 'generated_url',
-        ), $result);
+        return array(
+            array(array('my_route1', array(), false)),
+            array(array('my_route2', array(), true)),
+            array(array('my_route3', array('param' => 'value'), false)),
+            array(array('my_route4', array('param' => 'value'), true)),
+        );
     }
 }

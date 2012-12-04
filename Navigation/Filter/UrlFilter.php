@@ -18,7 +18,7 @@ class UrlFilter implements FilterInterface
     /**
      * {@inheritdoc}
      */
-    public function apply(array $options, ItemInterface $item)
+    public function apply(array &$options, ItemInterface $item)
     {
         if (!empty($options['route'])) {
             $route = (array) $options['route'] + array('', array(), false);

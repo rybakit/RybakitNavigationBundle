@@ -14,11 +14,6 @@ abstract class AbstractItem implements ItemInterface, \Countable
      */
     protected $children;
 
-    /**
-     * @var array
-     */
-    protected $attributes = array();
-
     public function __construct()
     {
         $this->children = new \SplObjectStorage();
@@ -102,22 +97,6 @@ abstract class AbstractItem implements ItemInterface, \Countable
     public function has(ItemInterface $item)
     {
         return $this->children->contains($item);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setAttribute($name, $value)
-    {
-        $this->attributes[$name] = $value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAttribute($name, $default = null)
-    {
-        return array_key_exists($name, $this->attributes) ? $this->attributes[$name] : $default;
     }
 
     /**

@@ -9,7 +9,14 @@ class ItemFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreate()
     {
-        $factory = new ItemFactory(null, new Item());
+        $filter = $this->getMock('\\Rybakit\\Bundle\\NavigationBundle\\Navigation\\Filter\\FilterInterface');
+        $filter->expects($this->any())
+            ->method('apply')
+            ->will($this->returnCallback(function($options, Item $item) {
+                $item->label = $options['label'];
+            }));
+
+        $factory = new ItemFactory($filter, new Item());
 
         $nav = $factory->create(array(
             'label'     => '0',
@@ -34,25 +41,12 @@ class ItemFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('(0)(1.1)(1.2)(1.2.1)(1.3)', $this->dumpItem($nav));
     }
 
-    public function testFilter()
+    protected function dumpItem(Item $item)
     {
-        $filter = $this->getMock('Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterInterface');
-        $filter->expects($this->once())->method('apply')
-            ->with($this->equalTo(array('label' => 'root')))
-            ->will($this->returnValue(array('label' => '*root*')));
+        $dump = '('.$item->label.')';
 
-        $factory = new ItemFactory($filter, new Item());
-        $root = $factory->create(array('label' => 'root'));
-
-        $this->assertEquals('*root*', $root->getLabel());
-    }
-
-    protected function dumpItem(Item $container)
-    {
-        $dump = '('.$container->getLabel().')';
-
-        foreach ($container as $item) {
-            $dump .= $this->dumpItem($item);
+        foreach ($item as $child) {
+            $dump .= $this->dumpItem($child);
         }
 
         return $dump;
