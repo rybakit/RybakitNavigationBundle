@@ -40,11 +40,6 @@ class Item extends AbstractItem
         }
     }
 
-    public function setLabel($label)
-    {
-        $this->label = $label;
-    }
-
     /**
      * @param bool $active
      *
