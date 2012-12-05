@@ -13,9 +13,9 @@ class ActiveFilter implements FilterInterface
     protected $matcher;
 
     /**
-     * @var bool
+     * @var ItemInterface
      */
-    protected $isMatched = false;
+    protected $active;
 
     /**
      * @param MatcherInterface $matcher
@@ -30,9 +30,17 @@ class ActiveFilter implements FilterInterface
      */
     public function apply(array &$options, ItemInterface $item)
     {
-        if (!$this->isMatched && $this->matcher->match($options)) {
+        if (!$this->active && $this->matcher->match($options)) {
             $options['active'] = true;
-            $this->isMatched = true;
+            $this->active = $item;
         }
+    }
+
+    /**
+     * @return ItemInterface|null
+     */
+    public function getActive()
+    {
+        return $this->active;
     }
 }
