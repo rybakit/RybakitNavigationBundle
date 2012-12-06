@@ -49,7 +49,7 @@ class Item extends AbstractItem
     {
         $this->isActive = (bool) $active;
 
-        if ($this->isActive && $parent = $this->getParent() instanceof self) {
+        if ($this->isActive && ($parent = $this->getParent()) instanceof self) {
             $parent->setActive();
         }
 
@@ -73,9 +73,9 @@ class Item extends AbstractItem
     {
         $this->isVisible = (bool) $visible;
 
-        foreach ($this->getIterator() as $item) {
-            if ($item instanceof self) {
-                $item->setVisible($visible);
+        foreach ($this->getIterator() as $child) {
+            if ($child instanceof self) {
+                $child->setVisible($visible);
             }
         }
 
