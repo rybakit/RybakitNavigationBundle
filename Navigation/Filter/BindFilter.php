@@ -12,6 +12,11 @@ class BindFilter implements FilterInterface
     protected $cache = array();
 
     /**
+     * @var array
+     */
+    protected $classes = array();
+
+    /**
      * {@inheritdoc}
      */
     public function apply(array &$options, ItemInterface $item)
@@ -31,28 +36,72 @@ class BindFilter implements FilterInterface
         $class = get_class($item);
 
         if (!isset($this->cache[$class][$option])) {
-            $normalizedOption = static::normalizeOptionName($option);
-            $methodName = 'set'.$normalizedOption;
+            $normalizedOptionName = static::normalizeOptionName($option);
 
-            $refl = new \ReflectionClass($class);
-            if ($refl->hasMethod($methodName)) {
-                $method = $refl->getMethod($methodName);
-                if ($method->isPublic() && 1 === $method->getNumberOfRequiredParameters()) {
-                    $this->cache[$class][$option]['method'] = $methodName;
-                }
+            $propertyName = lcfirst($normalizedOptionName);
+            if ($this->isValidProperty($class, $propertyName)) {
+                $this->cache[$class][$option]['property'] = $propertyName;
             } else {
-                $propertyName = lcfirst($normalizedOption);
-                if ($refl->hasProperty($propertyName) && $refl->getProperty($propertyName)->isPublic()) {
-                    $this->cache[$class][$option]['property'] = $propertyName;
+                $methodName = 'set'.$normalizedOptionName;
+                if ($this->isValidMethod($class, $methodName)) {
+                    $this->cache[$class][$option]['method'] = $methodName;
                 }
             }
         }
 
-        if (isset($this->cache[$class][$option]['method'])) {
-            $item->{$this->cache[$class][$option]['method']}($value);
-        } elseif (isset($this->cache[$class][$option]['property'])) {
+        if (isset($this->cache[$class][$option]['property'])) {
             $item->{$this->cache[$class][$option]['property']} = $value;
+        } elseif (isset($this->cache[$class][$option]['method'])) {
+            $item->{$this->cache[$class][$option]['method']}($value);
         }
+    }
+
+    /**
+     * @param string $class
+     * @param string $propertyName
+     *
+     * @return bool
+     */
+    protected function isValidProperty($class, $propertyName)
+    {
+        $reflClass = $this->getReflectionClass($class);
+
+        return $reflClass->hasProperty($propertyName) && $reflClass->getProperty($propertyName)->isPublic();
+    }
+
+    /**
+     * @param string $class
+     * @param string $methodName
+     *
+     * @return bool
+     */
+    protected function isValidMethod($class, $methodName)
+    {
+        $reflClass = $this->getReflectionClass($class);
+
+        if (!$reflClass->hasMethod($methodName)) {
+            return false;
+        }
+
+        $method = $reflClass->getMethod($methodName);
+
+        return $method->isPublic() &&
+            $method->getNumberOfParameters() > 0 &&
+            $method->getNumberOfRequiredParameters() <= 1;
+    }
+
+    /**
+     * @param string $class
+     *
+     * @return \ReflectionClass
+     */
+    protected function getReflectionClass($class)
+    {
+        if (!isset($this->classes[$class])) {
+            $this->classes[$class] = new \ReflectionClass($class);
+        }
+
+        return $this->classes[$class];
     }
 
     /**
