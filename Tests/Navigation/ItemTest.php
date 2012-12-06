@@ -33,7 +33,31 @@ class ItemTest extends \PHPUnit_Framework_TestCase
         $this->assertItemCopy($item121, $clone121, $clone12);
     }
 
-    public function assertItemCopy(Item $original, Item $clone, Item $cloneParent = null)
+    public function testSetActive()
+    {
+        $item = new Item();
+        $this->assertFalse($item->isActive());
+
+        $parent = new Item();
+        $parent->add($item);
+        $item->setActive(true);
+
+        $this->assertTrue($parent->isActive());
+    }
+
+    public function testSetVisible()
+    {
+        $item = new Item();
+        $this->assertTrue($item->isVisible());
+
+        $parent = new Item();
+        $parent->add($item);
+        $parent->setVisible(false);
+
+        $this->assertFalse($item->isVisible());
+    }
+
+    protected function assertItemCopy(Item $original, Item $clone, Item $cloneParent = null)
     {
         $this->assertNotSame($original, $clone);
         $this->assertEquals($original->label, $clone->label);
