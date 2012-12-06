@@ -64,9 +64,9 @@ class BindFilter implements FilterInterface
      */
     protected function isValidProperty($class, $propertyName)
     {
-        $reflClass = $this->getReflectionClass($class);
+        $class = $this->getReflectionClass($class);
 
-        return $reflClass->hasProperty($propertyName) && $reflClass->getProperty($propertyName)->isPublic();
+        return $class->hasProperty($propertyName) && $class->getProperty($propertyName)->isPublic();
     }
 
     /**
@@ -77,13 +77,13 @@ class BindFilter implements FilterInterface
      */
     protected function isValidMethod($class, $methodName)
     {
-        $reflClass = $this->getReflectionClass($class);
+        $class = $this->getReflectionClass($class);
 
-        if (!$reflClass->hasMethod($methodName)) {
+        if (!$class->hasMethod($methodName)) {
             return false;
         }
 
-        $method = $reflClass->getMethod($methodName);
+        $method = $class->getMethod($methodName);
 
         return $method->isPublic() &&
             $method->getNumberOfParameters() > 0 &&
