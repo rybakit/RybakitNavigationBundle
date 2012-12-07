@@ -146,7 +146,7 @@ class NavigationExtension extends \Twig_Extension
 
         if (!empty($options['visible_only']) && $options['visible_only']) {
             $filter = function(Item $current) use ($filter) {
-                return $filter($current) && $current->isVisible();
+                return $current->isVisible() && $filter($current);
             };
         }
 
