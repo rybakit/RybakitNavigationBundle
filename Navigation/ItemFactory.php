@@ -28,26 +28,24 @@ class ItemFactory
     }
 
     /**
-     * {@inheritdoc}
+     * Creates a tree using post-order traversal.
+     *
+     * @param array $options
+     *
+     * @return ItemInterface
      */
-    public function create(array $options = array(), ItemInterface $parent = null)
+    public function create(array $options = array())
     {
         $item = clone $this->itemPrototype;
 
-        if ($parent) {
-            $parent->add($item);
+        if (!empty($options['children'])) {
+            foreach ($options['children'] as $childOptions) {
+                $this->create($childOptions)->setParent($item);
+            }
+            unset($options['children']);
         }
-
-        $children = empty($options['children']) ? array() : $options['children'];
-        unset($options['children']);
 
         $this->filter->apply($options, $item);
-
-        if ($children) {
-            foreach ($children as $childOptions) {
-                $this->create($childOptions, $item);
-            }
-        }
 
         return $item;
     }
