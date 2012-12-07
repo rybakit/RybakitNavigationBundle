@@ -13,7 +13,7 @@ class AddTemplatePathPass implements CompilerPassInterface
             return;
         }
 
-        $class = new \ReflectionClass('Rybakit\Bundle\NavigationBundle\RybakitNavigationBundle');
+        $class = new \ReflectionClass('\\Rybakit\\Bundle\\NavigationBundle\\RybakitNavigationBundle');
         $path = dirname($class->getFileName()).'/Resources/views';
         $container->getDefinition('twig.loader')->addMethodCall('addPath', array($path));
     }
