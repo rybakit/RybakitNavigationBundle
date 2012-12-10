@@ -22,13 +22,13 @@ class ItemFactoryTest extends \PHPUnit_Framework_TestCase
         $factory = new ItemFactory($filter, new Item());
 
         $nav = $factory->create(array(
-                'label'     => '0',
-                'children'  => array(
-                    array('label' => '1.1'),
-                    array('label' => '1.2', 'children'  => array(array('label' => '1.2.1'))),
-                    array('label' => '1.3'),
-                ),
-            ));
+            'label'     => '0',
+            'children'  => array(
+                array('label' => '1.1'),
+                array('label' => '1.2', 'children'  => array(array('label' => '1.2.1'))),
+                array('label' => '1.3'),
+            ),
+        ));
 
         // post-order traversal
         $this->assertEquals('(4:0)(0:1.1)(2:1.2)(1:1.2.1)(3:1.3)', $this->dumpItem($nav));
