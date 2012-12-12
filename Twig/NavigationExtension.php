@@ -2,20 +2,13 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Twig;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Rybakit\Bundle\NavigationBundle\Navigation\Item;
 use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\BreadcrumbIterator;
-use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\RecursiveItemIterator;
-use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\RecursiveCallbackFilterIterator;
+use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\TreeIterator;
+use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\Filter\VisibleFilterIterator;
 
 class NavigationExtension extends \Twig_Extension
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
     /**
      * @var \Twig_Environment
      */
@@ -27,17 +20,10 @@ class NavigationExtension extends \Twig_Extension
     protected $template;
 
     /**
-     * @var ItemInterface[]
-     */
-    protected static $current = array();
-
-    /**
-     * @param ContainerInterface $container
      * @param \Twig_Template|string $template
      */
-    public function __construct(ContainerInterface $container, $template)
+    public function __construct($template)
     {
-        $this->container = $container;
         $this->template = $template;
     }
 
@@ -52,75 +38,75 @@ class NavigationExtension extends \Twig_Extension
     /**
      * {@inheritdoc}
      */
-    public function getFunctions()
+    public function getFilters()
     {
         return array(
-            'nav'             => new \Twig_Function_Method($this, 'render', array('is_safe' => array('html'))),
-            'nav_breadcrumbs' => new \Twig_Function_Method($this, 'renderBreadcrumbs', array('is_safe' => array('html'))),
-            'nav_current'     => new \Twig_Function_Method($this, 'getCurrent', array('is_safe' => array('html'))),
+            'tree'        => new \Twig_Filter_Method($this, 'createFilterTree'),
+            'breadcrumbs' => new \Twig_Filter_Method($this, 'createFilterBreadcrumbs'),
+            'visible'     => new \Twig_Filter_Method($this, 'createFilterVisible'),
+            'ancestor'    => new \Twig_Filter_Method($this, 'createFilterAncestor'),
+            'render'      => new \Twig_Filter_Method($this, 'createFilterRender', array('is_safe' => array('html'))),
         );
     }
 
     /**
-     * @param string $navName
+     * @param \Traversable $iterator
      *
-     * @return ItemInterface|null
+     * @return TreeIterator
      */
-    public function getCurrent($navName)
+    public function createFilterTree(\Traversable $iterator)
     {
-        if (!array_key_exists($navName, static::$current)) {
-            static::$current[$navName] = $this->container->get($navName)->getCurrent();
-        }
-
-        return static::$current[$navName];
+        return new TreeIterator($iterator);
     }
 
     /**
-     * Renders a navigation block.
+     * @param \RecursiveIterator $iterator
+     * @param bool               $isVisible
      *
-     * @param string $navName
+     * @return VisibleFilterIterator
+     */
+    public function createFilterVisible(\RecursiveIterator $iterator, $isVisible = true)
+    {
+        return new VisibleFilterIterator($iterator, $isVisible);
+    }
+
+    /**
+     * @param ItemInterface $item
+     * @param int           $level
+     *
+     * @return ItemInterface|null
+     */
+    public function createFilterAncestor(ItemInterface $item, $level)
+    {
+        $breadcrumbs = iterator_to_array(new BreadcrumbIterator($item));
+        $breadcrumbs = array_reverse($breadcrumbs);
+
+        return isset($breadcrumbs[$level]) ? $breadcrumbs[$level] : null;
+    }
+
+    /**
+     * @param ItemInterface $item
+     *
+     * @return BreadcrumbIterator
+     */
+    public function createFilterBreadcrumbs(ItemInterface $item)
+    {
+        return new BreadcrumbIterator($item);
+    }
+
+    /**
+     * @deprecated see https://github.com/fabpot/Twig/pull/926
+     *
+     * @param mixed  $item
+     * @param string $block
      * @param array  $options
      *
      * @return string
      */
-    public function render($navName, array $options = array())
+    public function createFilterRender($item, $block, array $options = array())
     {
-        if (!$root = $this->container->get($navName)) {
-            return '';
-        }
-
-        $options += array('block' => 'nav');
-        $items = $this->createNavigationIterator($root, $options);
-
-        return $this->getTemplate()->renderBlock($options['block'], array(
-            'items'   => $items,
-            'options' => $options,
-        ));
-    }
-
-    /**
-     * Renders a breadcrumbs block.
-     *
-     * @param string $navName
-     * @param mixed  $options
-     *
-     * @return string
-     */
-    public function renderBreadcrumbs($navName, $options = array())
-    {
-        if (!$current = $this->getCurrent($navName)) {
-            return '';
-        }
-
-        if (!is_array($options)) {
-            $options = array('last' => (string) $options);
-        }
-
-        $options += array('block' => 'breadcrumbs');
-        $items = $this->createBreadcrumbIterator($current, $options);
-
-        return $this->getTemplate()->renderBlock($options['block'], array(
-            'items'   => $items,
+        return $this->getTemplate()->renderBlock($block, array(
+            'items'   => $item,
             'options' => $options,
         ));
     }
@@ -133,39 +119,9 @@ class NavigationExtension extends \Twig_Extension
         return 'rybakit_navigation';
     }
 
-    protected function createNavigationIterator(ItemInterface $root, array $options = array())
-    {
-        $filter = null;
-
-        if (isset($options['depth'])) {
-            $depth  = (int) $options['depth'] + 1;
-            $filter = function(Item $current) use ($depth) {
-                return $current->getLevel() <= $depth;
-            };
-        }
-
-        if (!empty($options['visible_only']) && $options['visible_only']) {
-            $filter = function(Item $current) use ($filter) {
-                return $current->isVisible() && $filter($current);
-            };
-        }
-
-        $iterator = new RecursiveItemIterator($root);
-
-        if ($filter) {
-            $iterator = new RecursiveCallbackFilterIterator($iterator, function($current) use ($filter) {
-                return $current instanceof Item && $filter($current);
-            });
-        }
-
-        return $iterator;
-    }
-
-    protected function createBreadcrumbIterator(ItemInterface $current, array $options = array())
-    {
-        return new BreadcrumbIterator($current);
-    }
-
+    /**
+     * @return string|\Twig_Template|\Twig_TemplateInterface
+     */
     protected function getTemplate()
     {
         if (!$this->template instanceof \Twig_Template) {
