@@ -54,16 +54,6 @@ abstract class AbstractItem implements ItemInterface, \Countable
     }
 
     /**
-     * TODO remove getLevel()
-     *
-     * @return int
-     */
-    public function getLevel()
-    {
-        return $this->parent ? $this->parent->getLevel() + 1 : 0;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function add(ItemInterface $item)
