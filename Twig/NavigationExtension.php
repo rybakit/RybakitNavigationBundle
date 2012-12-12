@@ -120,7 +120,7 @@ class NavigationExtension extends \Twig_Extension
     }
 
     /**
-     * @return string|\Twig_Template|\Twig_TemplateInterface
+     * @return \Twig_Template
      */
     protected function getTemplate()
     {
