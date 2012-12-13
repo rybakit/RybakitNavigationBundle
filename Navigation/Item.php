@@ -15,6 +15,16 @@ class Item extends AbstractItem
     public $uri;
 
     /**
+     * @var string
+     */
+    public $transDomain;
+
+    /**
+     * @var array
+     */
+    public $transParams = array();
+
+    /**
      * @var bool
      */
     protected $isActive = false;
