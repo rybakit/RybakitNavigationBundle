@@ -5,7 +5,7 @@ namespace Rybakit\Bundle\NavigationBundle\Navigation\Filter;
 use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 use Rybakit\Bundle\NavigationBundle\Navigation\Filter\Matcher\MatcherInterface;
 
-class ActiveFilter implements FilterInterface
+class MatchFilter implements FilterInterface
 {
     /**
      * @var MatcherInterface
@@ -15,7 +15,7 @@ class ActiveFilter implements FilterInterface
     /**
      * @var ItemInterface
      */
-    protected $active;
+    protected $matched;
 
     /**
      * @param MatcherInterface $matcher
@@ -30,17 +30,16 @@ class ActiveFilter implements FilterInterface
      */
     public function apply(array &$options, ItemInterface $item)
     {
-        if (!$this->active && $this->matcher->match($options)) {
-            $options['active'] = true;
-            $this->active = $item;
+        if (!$this->matched && $this->matcher->match($options)) {
+            $this->matched = $item;
         }
     }
 
     /**
      * @return ItemInterface|null
      */
-    public function getActive()
+    public function getMatched()
     {
-        return $this->active;
+        return $this->matched;
     }
 }

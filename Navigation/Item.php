@@ -27,11 +27,6 @@ class Item extends AbstractItem
     /**
      * @var bool
      */
-    protected $isActive = false;
-
-    /**
-     * @var bool
-     */
     protected $isVisible = true;
 
     /**
@@ -48,30 +43,6 @@ class Item extends AbstractItem
         if (null !== $uri) {
             $this->uri = $uri;
         }
-    }
-
-    /**
-     * @param bool $active
-     *
-     * @return Item
-     */
-    public function setActive($active = true)
-    {
-        $this->isActive = (bool) $active;
-
-        if ($this->isActive && ($parent = $this->getParent()) instanceof self) {
-            $parent->setActive();
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive()
-    {
-        return $this->isActive;
     }
 
     /**
