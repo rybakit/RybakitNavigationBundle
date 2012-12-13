@@ -7,6 +7,9 @@ use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 class Item implements ItemInterface
 {
     public $label;
+    public $parent;
+    public $children;
+
     public $publicProperty;
     public $nonPublicPropertyWithSetterValue;
     public $nonPublicPropertyWithSetterDefaultArgValue;
@@ -29,10 +32,12 @@ class Item implements ItemInterface
 
     public function setParent(ItemInterface $parent = null)
     {
+        $this->parent = $parent;
     }
 
     public function getParent()
     {
+        return $this->parent;
     }
 
     public function add(ItemInterface $item)

@@ -52,10 +52,10 @@ class NavigationExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            'tree'        => new \Twig_Filter_Method($this, 'createFilterTree'),
-            'visible'     => new \Twig_Filter_Method($this, 'createFilterVisible'),
-            'ancestor'    => new \Twig_Filter_Method($this, 'createFilterAncestor'),
-            'breadcrumbs' => new \Twig_Filter_Method($this, 'createFilterBreadcrumbs'),
+            'tree'        => new \Twig_Filter_Method($this, 'addTreeFilter'),
+            'visible'     => new \Twig_Filter_Method($this, 'addVisibilityFilter'),
+            'breadcrumbs' => new \Twig_Filter_Method($this, 'addBreadcrumbFilter'),
+            'ancestor'    => new \Twig_Filter_Method($this, 'getAncestor'),
         );
     }
 
@@ -65,7 +65,7 @@ class NavigationExtension extends \Twig_Extension
      *
      * @return TreeIterator
      */
-    public function createFilterTree(\Traversable $iterator, $depth = null)
+    public function addTreeFilter(\Traversable $iterator, $depth = null)
     {
         $iterator = new TreeIterator($iterator);
 
@@ -82,7 +82,7 @@ class NavigationExtension extends \Twig_Extension
      *
      * @return CustomFilterIterator
      */
-    public function createFilterVisible(\RecursiveIterator $iterator, $isVisible = true)
+    public function addVisibilityFilter(\RecursiveIterator $iterator, $isVisible = true)
     {
         return new CustomFilterIterator($iterator, function($item) use ($isVisible) {
             return $item instanceof Item && $isVisible == $item->isVisible();
@@ -91,26 +91,35 @@ class NavigationExtension extends \Twig_Extension
 
     /**
      * @param ItemInterface $item
-     * @param int           $level
      *
-     * @return ItemInterface|null
+     * @return BreadcrumbIterator
      */
-    public function createFilterAncestor(ItemInterface $item, $level)
+    public function addBreadcrumbFilter(ItemInterface $item)
     {
-        $breadcrumbs = iterator_to_array(new BreadcrumbIterator($item));
-        $breadcrumbs = array_reverse($breadcrumbs);
-
-        return isset($breadcrumbs[$level]) ? $breadcrumbs[$level] : null;
+        return new BreadcrumbIterator($item);
     }
 
     /**
      * @param ItemInterface $item
+     * @param int           $level
      *
-     * @return BreadcrumbIterator
+     * @return ItemInterface|null
      */
-    public function createFilterBreadcrumbs(ItemInterface $item)
+    public function getAncestor(ItemInterface $item, $level)
     {
-        return new BreadcrumbIterator($item);
+        if ($level >= 0) {
+            $breadcrumbs = iterator_to_array(new BreadcrumbIterator($item), false);
+            $breadcrumbs = array_reverse($breadcrumbs);
+
+            return isset($breadcrumbs[$level]) ? $breadcrumbs[$level] : null;
+        }
+
+        do {
+            $item = $item->getParent();
+            ++$level;
+        } while ($item && $level < 0);
+
+        return $item;
     }
 
     /**
