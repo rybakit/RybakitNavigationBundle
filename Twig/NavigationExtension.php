@@ -53,7 +53,6 @@ class NavigationExtension extends \Twig_Extension
     {
         return array(
             'tree'        => new \Twig_Filter_Method($this, 'createFilterTree'),
-            'depth'       => new \Twig_Filter_Method($this, 'createFilterDepth'),
             'visible'     => new \Twig_Filter_Method($this, 'createFilterVisible'),
             'ancestor'    => new \Twig_Filter_Method($this, 'createFilterAncestor'),
             'breadcrumbs' => new \Twig_Filter_Method($this, 'createFilterBreadcrumbs'),
@@ -62,24 +61,18 @@ class NavigationExtension extends \Twig_Extension
 
     /**
      * @param \Traversable $iterator
+     * @param int|null     $depth
      *
      * @return TreeIterator
      */
-    public function createFilterTree(\Traversable $iterator)
+    public function createFilterTree(\Traversable $iterator, $depth = null)
     {
-        return new TreeIterator($iterator);
-    }
+        $iterator = new TreeIterator($iterator);
 
-    /**
-     * TODO implement createFilterDepth()
-     *
-     * @param \RecursiveIterator $iterator
-     * @param int                $depth
-     *
-     * @return CustomFilterIterator
-     */
-    public function createFilterDepth(\RecursiveIterator $iterator, $depth = 1)
-    {
+        if (null !== $depth) {
+            $iterator->setMaxLevel($depth);
+        }
+
         return $iterator;
     }
 
