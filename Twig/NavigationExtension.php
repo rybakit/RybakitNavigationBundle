@@ -70,7 +70,7 @@ class NavigationExtension extends \Twig_Extension
         $iterator = new TreeIterator($iterator);
 
         if (null !== $depth) {
-            $iterator->setMaxLevel($depth);
+            $iterator->setMaxLevel((int) $depth - 1);
         }
 
         return $iterator;
