@@ -2,10 +2,11 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Twig;
 
+use Rybakit\Bundle\NavigationBundle\Navigation\Item;
 use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\BreadcrumbIterator;
+use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\CustomFilterIterator;
 use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\TreeIterator;
-use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\Filter\VisibleFilterIterator;
 
 class NavigationExtension extends \Twig_Extension
 {
@@ -38,14 +39,24 @@ class NavigationExtension extends \Twig_Extension
     /**
      * {@inheritdoc}
      */
+    public function getFunctions()
+    {
+        return array(
+            'nav' => new \Twig_Function_Method($this, 'render', array('is_safe' => array('html'))),
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getFilters()
     {
         return array(
             'tree'        => new \Twig_Filter_Method($this, 'createFilterTree'),
-            'breadcrumbs' => new \Twig_Filter_Method($this, 'createFilterBreadcrumbs'),
+            'depth'       => new \Twig_Filter_Method($this, 'createFilterDepth'),
             'visible'     => new \Twig_Filter_Method($this, 'createFilterVisible'),
             'ancestor'    => new \Twig_Filter_Method($this, 'createFilterAncestor'),
-            'render'      => new \Twig_Filter_Method($this, 'createFilterRender', array('is_safe' => array('html'))),
+            'breadcrumbs' => new \Twig_Filter_Method($this, 'createFilterBreadcrumbs'),
         );
     }
 
@@ -60,14 +71,29 @@ class NavigationExtension extends \Twig_Extension
     }
 
     /**
+     * TODO implement createFilterDepth()
+     *
+     * @param \RecursiveIterator $iterator
+     * @param int                $depth
+     *
+     * @return CustomFilterIterator
+     */
+    public function createFilterDepth(\RecursiveIterator $iterator, $depth = 1)
+    {
+        return $iterator;
+    }
+
+    /**
      * @param \RecursiveIterator $iterator
      * @param bool               $isVisible
      *
-     * @return VisibleFilterIterator
+     * @return CustomFilterIterator
      */
     public function createFilterVisible(\RecursiveIterator $iterator, $isVisible = true)
     {
-        return new VisibleFilterIterator($iterator, $isVisible);
+        return new CustomFilterIterator($iterator, function($item) use ($isVisible) {
+            return $item instanceof Item && $isVisible == $item->isVisible();
+        });
     }
 
     /**
@@ -95,7 +121,9 @@ class NavigationExtension extends \Twig_Extension
     }
 
     /**
-     * @deprecated see https://github.com/fabpot/Twig/pull/926
+     * Renders a navigation.
+     *
+     * @see https://github.com/fabpot/Twig/pull/926
      *
      * @param mixed  $item
      * @param string $block
@@ -103,7 +131,7 @@ class NavigationExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function createFilterRender($item, $block, array $options = array())
+    public function render($item, $block, array $options = array())
     {
         return $this->getTemplate()->renderBlock($block, array(
             'items'   => $item,
