@@ -42,7 +42,10 @@ class TreeIterator extends \IteratorIterator implements \RecursiveIterator
 
     public function getChildren()
     {
-        return new static($this->current(), $this->level + 1);
+        $iterator = new static($this->current(), $this->level + 1);
+        $iterator->setMaxLevel($this->maxLevel);
+
+        return $iterator;
     }
 
     /**
