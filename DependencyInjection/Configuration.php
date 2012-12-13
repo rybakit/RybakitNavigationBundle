@@ -8,22 +8,15 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 class Configuration implements ConfigurationInterface
 {
     /**
-     * Generates the configuration tree builder.
-     *
-     * @return TreeBuilder The tree builder
+     * {@inheritdoc}
      */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
         $treeBuilder->root('rybakit_navigation')
             ->children()
-                ->arrayNode('twig')
-                ->addDefaultsIfNotSet()
-                ->canBeUnset()
-                ->children()
-                    ->scalarNode('template')
-                        ->defaultValue('bootstrap.html.twig')
-                    ->end()
+                ->scalarNode('template')
+                    ->defaultValue('bootstrap.html.twig')
                 ->end()
             ->end()
         ->end();

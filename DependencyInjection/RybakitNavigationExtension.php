@@ -20,6 +20,6 @@ class RybakitNavigationExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('rybakit_navigation.twig.template', $config['twig']['template']);
+        $container->setParameter('rybakit_navigation.template', $config['template']);
     }
 }

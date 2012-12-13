@@ -10,8 +10,7 @@
 
     <services>
         <service id="rybakit_navigation.twig.extension" class="%rybakit_navigation.twig.extension.class%" public="false">
-            <argument type="service" id="service_container" />
-            <argument>%rybakit_navigation.twig.template%</argument>
+            <argument>%rybakit_navigation.template%</argument>
             <tag name="twig.extension" />
         </service>
     </services>
