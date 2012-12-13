@@ -2,9 +2,9 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Tests\Navigation\Filter;
 
-use Rybakit\Bundle\NavigationBundle\Navigation\Filter\ActiveFilter;
+use Rybakit\Bundle\NavigationBundle\Navigation\Filter\MatchFilter;
 
-class ActiveFilterTest extends \PHPUnit_Framework_TestCase
+class MatchFilterTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider testApplyProvider
@@ -18,12 +18,12 @@ class ActiveFilterTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($isMatched));
 
         $options = array();
-        $filter = new ActiveFilter($matcher);
+        $filter = new MatchFilter($matcher);
         $filter->apply($options, $item);
 
         $isMatched
-            ? $this->assertEquals(array('active' => true), $options)
-            : $this->assertEquals(array(), $options);
+            ? $this->assertEquals($item, $filter->getMatched())
+            : $this->assertNull($filter->getMatched());
     }
 
     public function testApplyProvider()
