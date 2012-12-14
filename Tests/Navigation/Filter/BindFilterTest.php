@@ -24,7 +24,7 @@ class BindFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('value1', $item->publicProperty);
         $this->assertEquals('value2', $item->nonPublicPropertyWithSetterValue);
         $this->assertEquals('value3', $item->nonPublicPropertyWithSetterDefaultArgValue);
-        $this->assertEquals(false, $item->isNonPublicPropertyWithSetterManyArgsCalled);
+        $this->assertFalse($item->isNonPublicPropertyWithSetterManyArgsCalled);
         $this->assertEquals($originalOptions, $options);
     }
 }
