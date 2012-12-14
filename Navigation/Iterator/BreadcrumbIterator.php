@@ -12,8 +12,7 @@ class BreadcrumbIterator implements \Iterator
 
     public function __construct(ItemInterface $last)
     {
-        $this->last = $last;
-        $this->current = $last;
+        $this->current = $this->last = $last;
     }
 
     public function rewind()
@@ -38,7 +37,7 @@ class BreadcrumbIterator implements \Iterator
             $this->current = $this->current->getParent();
         }
 
-        ++$this->pos;
+        $this->pos = $this->current ? $this->pos + 1 : null;
     }
 
     public function valid()
