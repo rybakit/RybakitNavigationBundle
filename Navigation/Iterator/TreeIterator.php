@@ -23,18 +23,16 @@ class TreeIterator extends \IteratorIterator implements \RecursiveIterator
 
     public function hasChildren()
     {
-        if ($this->level >= $this->maxLevel) {
-            return false;
-        }
+        if ($this->level < $this->maxLevel) {
+            $current = $this->current();
 
-        $iterator = $this->current();
+            if ($current instanceof \IteratorAggregate) {
+                $current = $current->getIterator();
+            }
 
-        if ($iterator instanceof \IteratorAggregate) {
-            $iterator = $iterator->getIterator();
-        }
-
-        if ($iterator instanceof \Iterator) {
-            return 0 !== iterator_count($iterator);
+            if ($current instanceof \Iterator) {
+                return 0 !== iterator_count($current);
+            }
         }
 
         return false;
