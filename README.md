@@ -4,7 +4,7 @@ RybakitNavigationBundle
 
 ## Installation
 
-Add to your composer.json file
+Add the following to your composer.json file
 
 ``` json
 {
@@ -13,7 +13,7 @@ Add to your composer.json file
     }
 }
 ```
-and run the command:
+and update composer dependencies:
 
 ```bash
 $ php composer.phar update rybakit/navigation-bundle
