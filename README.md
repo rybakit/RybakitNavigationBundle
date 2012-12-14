@@ -33,7 +33,6 @@ public function registerBundles()
 }
 ```
 
-
 ## Usage Examples
 
 ### Build navigation tree
