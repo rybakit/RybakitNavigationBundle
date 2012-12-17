@@ -79,6 +79,8 @@ $root = $factory->create($array);
 // Acme/DemoBundle/Navigation/NavigationBuilder.php
 <?php
 
+namespace Acme\DemoBundle\Navigation;
+
 use Rybakit\Bundle\NavigationBundle\Navigation\ItemFactory;
 use Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterChain;
 use Rybakit\Bundle\NavigationBundle\Navigation\Filter\MatchFilter;
