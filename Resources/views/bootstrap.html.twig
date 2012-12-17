@@ -34,6 +34,28 @@
 {% endspaceless %}
 {% endblock %}
 
+{% block navlist %}
+{% spaceless %}
+    <ul class="nav nav-list">{{ block('navlist_items') }}</ul>
+{% endspaceless %}
+{% endblock %}
+
+{% block navlist_items %}
+{% spaceless %}
+    {% for item in items %}
+        {{ block(items.hasChildren ? 'navlist_item_children' : 'nav_item') }}
+    {% endfor %}
+{% endspaceless %}
+{% endblock %}
+
+{% block navlist_item_children %}
+{% spaceless %}
+    <li class="nav-header">{{ item.label }}</li>
+    {% set items = items.getChildren %}
+    {{ block('navlist_items') }}
+{% endspaceless %}
+{% endblock %}
+
 {% block breadcrumbs %}
 {% spaceless %}
     <ul class="breadcrumb">
