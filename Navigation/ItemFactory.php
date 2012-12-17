@@ -3,6 +3,7 @@
 namespace Rybakit\Bundle\NavigationBundle\Navigation;
 
 use Rybakit\Bundle\NavigationBundle\Navigation\Filter\BindFilter;
+use Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterChain;
 use Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterInterface;
 
 class ItemFactory
@@ -48,5 +49,25 @@ class ItemFactory
         $this->filter->apply($options, $item);
 
         return $item;
+    }
+
+    /**
+     * @param FilterInterface $filter
+     */
+    public function setFilter(FilterInterface $filter)
+    {
+        $this->filter = $filter;
+    }
+
+    /**
+     * @param FilterInterface $filter
+     */
+    public function addFilter(FilterInterface $filter)
+    {
+        if ($this->filter instanceof FilterChain) {
+            $this->filter->addFilter($filter);
+        } else {
+            $this->filter = new FilterChain(array($this->filter, $filter));
+        }
     }
 }

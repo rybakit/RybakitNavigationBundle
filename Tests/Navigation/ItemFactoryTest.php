@@ -21,7 +21,7 @@ class ItemFactoryTest extends \PHPUnit_Framework_TestCase
 
         $factory = new ItemFactory($filter, new Item());
 
-        $nav = $factory->create(array(
+        $root = $factory->create(array(
             'label'     => '0',
             'children'  => array(
                 array('label' => '1.1'),
@@ -31,7 +31,26 @@ class ItemFactoryTest extends \PHPUnit_Framework_TestCase
         ));
 
         // post-order traversal
-        $this->assertEquals('(4:0)(0:1.1)(2:1.2)(1:1.2.1)(3:1.3)', $this->dumpItem($nav));
+        $this->assertEquals('(4:0)(0:1.1)(2:1.2)(1:1.2.1)(3:1.3)', $this->dumpItem($root));
+    }
+
+    /**
+     * TODO refactor testSetFilter()
+     */
+    public function testSetFilter()
+    {
+        $item = $this->getMock('\\Rybakit\\Bundle\\NavigationBundle\\Navigation\\ItemInterface');
+
+        $defaultFilter = $this->getMock('\\Rybakit\\Bundle\\NavigationBundle\\Navigation\\Filter\\FilterInterface');
+        $defaultFilter->expects($this->once())->method('apply')->with($this->equalTo(array('label' => 'root')));
+
+        $customFilter = $this->getMock('\\Rybakit\\Bundle\\NavigationBundle\\Navigation\\Filter\\FilterInterface');
+        $customFilter->expects($this->once())->method('apply')->with($this->equalTo(array('label' => '*root*')));
+
+        $factory = new ItemFactory($defaultFilter, $item);
+        $factory->create(array('label' => 'root'));
+        $factory->setFilter($customFilter);
+        $factory->create(array('label' => '*root*'));
     }
 
     protected function dumpItem(Item $item)

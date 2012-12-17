@@ -76,27 +76,44 @@ $root = $factory->create($array);
 ### Match current item
 
 ``` php
+// Acme/DemoBundle/Navigation/NavigationBuilder.php
 <?php
 
 use Rybakit\Bundle\NavigationBundle\Navigation\ItemFactory;
-use Rybakit\Bundle\NavigationBundle\Navigation\Fitler\BindFilter;
-use Rybakit\Bundle\NavigationBundle\Navigation\Fitler\FilterChain;
-use Rybakit\Bundle\NavigationBundle\Navigation\Fitler\MatchFilter;
-
-use Acme\DemoBundle\Navigation\Matcher\RoutesMatcher;
+use Rybakit\Bundle\NavigationBundle\Navigation\Filter\MatchFilter;
+use Rybakit\Bundle\NavigationBundle\Navigation\Filter\Matcher\RoutesMatcher;
 
 ...
 
-$matchFilter = new MatchFilter(new RoutesMatcher('route_name'));
-$filter = new FilterChain(array($matchFilter, new BindFilter()));
+    public function createNavigation()
+    {
+        $route = $this->request->attributes->get('_route');
+        $routeParams = $this->request->attributes->get('_route_params', array());
 
-$factory = new ItemFactory($filter);
-$root = $factory->create($array);
+        $matchFilter = new MatchFilter(new RoutesMatcher($route, $routeParams));
 
-if (!$current = $matchFilter->getMatched()) {
-    $current = $root;
-}
-$current->setActive();
+        $factory = new ItemFactory();
+        $factory->addFilter($matchFilter);
+
+        $root = $factory->create(array(
+            'label'     => 'acme_demo.home',
+            'route'     => 'acme_demo_home',
+            'children'  => array(
+                array(
+                    'label'  => 'acme_demo.user_new',
+                    'route'  => 'acme_demo_user_new',
+                    'routes' => array('acme_demo_user_new', 'acme_demo_user_create'),
+                ),
+            ),
+        ));
+
+        if (!$current = $matchFilter->getMatched()) {
+            $current = $root;
+        }
+        $current->setActive();
+
+        return array('root' => $root, 'current' => $current);
+    }
 ```
 
 ### Default options
