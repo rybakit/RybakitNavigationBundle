@@ -1,3 +1,6 @@
+{# Nav links (navbar component) #}
+{# http://twitter.github.com/bootstrap/components.html#navbar #}
+
 {% block nav %}
 {% spaceless %}
     <ul class="nav">{{ block('nav_items') }}</ul>
@@ -34,6 +37,9 @@
 {% endspaceless %}
 {% endblock %}
 
+{# Nav list #}
+{# http://twitter.github.com/bootstrap/components.html#navs #}
+
 {% block navlist %}
 {% spaceless %}
     <ul class="nav nav-list">{{ block('navlist_items') }}</ul>
@@ -56,6 +62,9 @@
 {% endspaceless %}
 {% endblock %}
 
+{# Breadcrumbs #}
+{# http://twitter.github.com/bootstrap/components.html#breadcrumbs #}
+
 {% block breadcrumbs %}
 {% spaceless %}
     <ul class="breadcrumb">
@@ -75,6 +84,8 @@
     </ul>
 {% endspaceless %}
 {% endblock %}
+
+{# Misc #}
 
 {% block label %}
 {% spaceless %}
