@@ -14,7 +14,7 @@ class FilterChain implements FilterInterface
     /**
      * @param array $filters
      */
-    public function __construct(array $filters)
+    public function __construct(array $filters = array())
     {
         foreach ($filters as $filter) {
             $this->add($filter);
