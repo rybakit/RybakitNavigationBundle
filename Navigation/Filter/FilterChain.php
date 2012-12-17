@@ -17,7 +17,7 @@ class FilterChain implements FilterInterface
     public function __construct(array $filters)
     {
         foreach ($filters as $filter) {
-            $this->addFilter($filter);
+            $this->add($filter);
         }
     }
 
@@ -31,7 +31,7 @@ class FilterChain implements FilterInterface
         }
     }
 
-    public function addFilter(FilterInterface $filter)
+    public function add(FilterInterface $filter)
     {
         $this->filters[] = $filter;
     }

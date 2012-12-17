@@ -65,7 +65,7 @@ class ItemFactory
     public function addFilter(FilterInterface $filter)
     {
         if ($this->filter instanceof FilterChain) {
-            $this->filter->addFilter($filter);
+            $this->filter->add($filter);
         } else {
             $this->filter = new FilterChain(array($this->filter, $filter));
         }
