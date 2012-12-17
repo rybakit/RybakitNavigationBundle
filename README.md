@@ -82,6 +82,7 @@ $root = $factory->create($array);
 namespace Acme\DemoBundle\Navigation;
 
 use Rybakit\Bundle\NavigationBundle\Navigation\ItemFactory;
+use Rybakit\Bundle\NavigationBundle\Navigation\Filter\BindFilter;
 use Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterChain;
 use Rybakit\Bundle\NavigationBundle\Navigation\Filter\MatchFilter;
 use Rybakit\Bundle\NavigationBundle\Navigation\Filter\Matcher\RoutesMatcher;
