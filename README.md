@@ -116,7 +116,7 @@ use Rybakit\Bundle\NavigationBundle\Navigation\Filter\Matcher\RoutesMatcher;
     }
 ```
 
-### Default options
+### Default item properties
 
 ``` php
 <?php
@@ -128,7 +128,7 @@ use Rybakit\Bundle\NavigationBundle\Navigation\ItemFactory;
 
 $item = new Item();
 
-// set traslation domain to "AcmeDemoBundle" by default for all tree items
+// set translation domain to "AcmeDemoBundle" by default for all tree items
 $item->transDomain = 'AcmeDemoBundle';
 
 $factory = new ItemFactory(null, $item);
