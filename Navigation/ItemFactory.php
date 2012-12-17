@@ -2,8 +2,6 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Navigation;
 
-use Rybakit\Bundle\NavigationBundle\Navigation\Filter\BindFilter;
-use Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterChain;
 use Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterInterface;
 
 class ItemFactory
@@ -19,12 +17,12 @@ class ItemFactory
     protected $itemPrototype;
 
     /**
-     * @param FilterInterface|null $filter
-     * @param ItemInterface|null   $itemPrototype
+     * @param FilterInterface    $filter
+     * @param ItemInterface|null $itemPrototype
      */
-    public function __construct(FilterInterface $filter = null, ItemInterface $itemPrototype = null)
+    public function __construct(FilterInterface $filter, ItemInterface $itemPrototype = null)
     {
-        $this->filter = $filter ?: new BindFilter();
+        $this->filter = $filter;
         $this->itemPrototype = $itemPrototype ?: new Item();
     }
 
@@ -52,22 +50,10 @@ class ItemFactory
     }
 
     /**
-     * @param FilterInterface $filter
+     * @return FilterInterface
      */
-    public function setFilter(FilterInterface $filter)
+    public function getFilter()
     {
-        $this->filter = $filter;
-    }
-
-    /**
-     * @param FilterInterface $filter
-     */
-    public function addFilter(FilterInterface $filter)
-    {
-        if ($this->filter instanceof FilterChain) {
-            $this->filter->add($filter);
-        } else {
-            $this->filter = new FilterChain(array($this->filter, $filter));
-        }
+        return $this->filter;
     }
 }

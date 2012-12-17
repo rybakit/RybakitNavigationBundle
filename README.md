@@ -80,21 +80,25 @@ $root = $factory->create($array);
 <?php
 
 use Rybakit\Bundle\NavigationBundle\Navigation\ItemFactory;
+use Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterChain;
 use Rybakit\Bundle\NavigationBundle\Navigation\Filter\MatchFilter;
 use Rybakit\Bundle\NavigationBundle\Navigation\Filter\Matcher\RoutesMatcher;
 
-...
+class NavigationBuilder
+{
+    ...
 
     public function createNavigation()
     {
         $route = $this->request->attributes->get('_route');
         $routeParams = $this->request->attributes->get('_route_params', array());
 
-        $matchFilter = new MatchFilter(new RoutesMatcher($route, $routeParams));
+        $filter = new FilterChain(array(
+            $matchFilter = new MatchFilter(new RoutesMatcher($route, $routeParams)),
+            new BindFilter(),
+        ));
 
-        $factory = new ItemFactory();
-        $factory->addFilter($matchFilter);
-
+        $factory = new ItemFactory($filter);
         $root = $factory->create(array(
             'label'     => 'acme_demo.home',
             'route'     => 'acme_demo_home',
@@ -114,6 +118,7 @@ use Rybakit\Bundle\NavigationBundle\Navigation\Filter\Matcher\RoutesMatcher;
 
         return array('root' => $root, 'current' => $current);
     }
+}
 ```
 
 ### Default item properties
