@@ -57,6 +57,7 @@ $root->remove($child);
 <?php
 
 use Rybakit\Bundle\NavigationBundle\Navigation\ItemFactory;
+use Rybakit\Bundle\NavigationBundle\Navigation\Filter\BindFilter;
 
 ...
 
@@ -69,7 +70,7 @@ $array = array(
     ),
 );
 
-$factory = new ItemFactory();
+$factory = new ItemFactory(new BindFilter());
 $root = $factory->create($array);
 ```
 
@@ -131,6 +132,7 @@ class NavigationBuilder
 
 use Rybakit\Bundle\NavigationBundle\Navigation\Item;
 use Rybakit\Bundle\NavigationBundle\Navigation\ItemFactory;
+use Rybakit\Bundle\NavigationBundle\Navigation\Filter\BindFilter;
 
 ...
 
@@ -139,7 +141,7 @@ $item = new Item();
 // set translation domain to "AcmeDemoBundle" by default for all tree items
 $item->transDomain = 'AcmeDemoBundle';
 
-$factory = new ItemFactory(null, $item);
+$factory = new ItemFactory(new BindFilter(), $item);
 $root = $factory->create($array);
 ```
 
