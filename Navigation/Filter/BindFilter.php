@@ -7,83 +7,85 @@ use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 class BindFilter implements FilterInterface
 {
     /**
-     * @var array
-     */
-    protected $cache = array();
-
-    /**
-     * @var array
+     * @var \ReflectionClass[]
      */
     protected $classes = array();
+
+    /**
+     * @var (\Closure|bool)[]
+     */
+    protected $closures = array();
 
     /**
      * {@inheritdoc}
      */
     public function apply(array &$options, ItemInterface $item)
     {
-        foreach ($options as $key => $value) {
-            $this->bindOption($item, $key, $value);
-        }
-    }
-
-    /**
-     * @param ItemInterface $item
-     * @param string        $option
-     * @param mixed         $value
-     */
-    protected function bindOption(ItemInterface $item, $option, $value)
-    {
         $class = get_class($item);
 
-        if (!isset($this->cache[$class][$option])) {
-            $normalizedOptionName = static::normalizeOptionName($option);
+        foreach ($options as $option => $value) {
+            if (!isset($this->closures[$class][$option])) {
+                $this->closures[$class][$option] = $this->resolveOption($class, $option);
+            }
 
-            $propertyName = lcfirst($normalizedOptionName);
-            if ($this->isValidProperty($class, $propertyName)) {
-                $this->cache[$class][$option]['property'] = $propertyName;
-            } else {
-                $methodName = 'set'.$normalizedOptionName;
-                if ($this->isValidMethod($class, $methodName)) {
-                    $this->cache[$class][$option]['method'] = $methodName;
-                }
+            if (false !== $this->closures[$class][$option]) {
+                $this->closures[$class][$option]($item, $value);
             }
         }
+    }
 
-        if (isset($this->cache[$class][$option]['property'])) {
-            $item->{$this->cache[$class][$option]['property']} = $value;
-        } elseif (isset($this->cache[$class][$option]['method'])) {
-            $item->{$this->cache[$class][$option]['method']}($value);
+    /**
+     * @param string $class
+     * @param string $option
+     *
+     * @return \Closure|bool
+     */
+    protected function resolveOption($class, $option)
+    {
+        $option = static::normalize($option);
+        $reflClass = $this->getReflectionClass($class);
+
+        $property = lcfirst($option);
+        if ($this->isValidProperty($reflClass, $property)) {
+            return function(ItemInterface $item, $value) use ($property) {
+                $item->{$property} = $value;
+            };
         }
+
+        $method = 'set'.$option;
+        if ($this->isValidMethod($reflClass, $method)) {
+            return function(ItemInterface $item, $value) use ($method) {
+                $item->{$method}($value);
+            };
+        }
+
+        return false;
     }
 
     /**
-     * @param string $class
-     * @param string $propertyName
+     * @param \ReflectionClass $class
+     * @param string           $name
      *
      * @return bool
      */
-    protected function isValidProperty($class, $propertyName)
+    protected function isValidProperty(\ReflectionClass $class, $name)
     {
-        $class = $this->getReflectionClass($class);
-
-        return $class->hasProperty($propertyName) && $class->getProperty($propertyName)->isPublic();
+        return $class->hasProperty($name) && $class->getProperty($name)->isPublic();
     }
 
     /**
-     * @param string $class
-     * @param string $methodName
+     * @param \ReflectionClass $class
+     * @param string           $name
      *
      * @return bool
      */
-    protected function isValidMethod($class, $methodName)
+    protected function isValidMethod(\ReflectionClass $class, $name)
     {
-        $class = $this->getReflectionClass($class);
-
-        if (!$class->hasMethod($methodName)) {
+        if (!$class->hasMethod($name)) {
             return false;
         }
 
-        $method = $class->getMethod($methodName);
+        $method = $class->getMethod($name);
 
         return $method->isPublic() &&
             $method->getNumberOfParameters() > 0 &&
@@ -105,14 +107,14 @@ class BindFilter implements FilterInterface
     }
 
     /**
-     * Normalizes an option name.
+     * Converts 'option_name' to 'OptionName'.
      *
-     * @param string $option
+     * @param string $string
      *
      * @return string
      */
-    protected static function normalizeOptionName($option)
+    protected static function normalize($string)
     {
-        return str_replace(' ', '', ucwords(str_replace('_', ' ', $option)));
+        return str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
     }
 }
