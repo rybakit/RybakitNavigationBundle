@@ -166,6 +166,9 @@ $root = $factory->create($array);
 {# render breadcrumbs #}
 {{ nav(nav.current|breadcrumbs, "breadcrumbs") }}
 
+{# render breadcrumbs with custom title at the end #}
+{{ nav(nav.current|breadcrumbs, "breadcrumbs", { "last": "Custom title" }) }}
+
 {# get root #}
 {{ nav.current|ancestor(0) }}
 
