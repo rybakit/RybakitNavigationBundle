@@ -35,10 +35,9 @@ class BreadcrumbIterator implements \Iterator
     {
         if ($this->current) {
             $this->current = $this->current->getParent();
-            $this->pos++;
-        } else {
-            $this->pos = null;
         }
+
+        $this->pos = $this->current ? $this->pos + 1 : null;
     }
 
     public function valid()
