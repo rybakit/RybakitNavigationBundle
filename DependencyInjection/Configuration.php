@@ -16,7 +16,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder->root('rybakit_navigation')
             ->children()
                 ->scalarNode('template')
-                    ->defaultValue('bootstrap.html.twig')
+                    ->defaultValue('RybakitNavigationBundle::bootstrap.html.twig')
                 ->end()
             ->end()
         ->end();
