@@ -3,7 +3,7 @@
 namespace Rybakit\Bundle\NavigationBundle\Navigation\Filter;
 
 use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
-use Rybakit\Bundle\NavigationBundle\Navigation\Filter\Matcher\MatcherInterface;
+use Rybakit\Bundle\NavigationBundle\Navigation\Matcher\MatcherInterface;
 
 class MatchFilter implements FilterInterface
 {
@@ -30,7 +30,7 @@ class MatchFilter implements FilterInterface
      */
     public function apply(array &$options, ItemInterface $item)
     {
-        if (!$this->matched && $this->matcher->match($options)) {
+        if (!$this->matched && $this->matcher->match($item)) {
             $this->matched = $item;
         }
     }

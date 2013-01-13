@@ -52,10 +52,10 @@ class NavigationExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            'tree'        => new \Twig_Filter_Method($this, 'addTreeFilter'),
-            'visible'     => new \Twig_Filter_Method($this, 'addVisibilityFilter'),
-            'breadcrumbs' => new \Twig_Filter_Method($this, 'addBreadcrumbFilter'),
-            'ancestor'    => new \Twig_Filter_Method($this, 'getAncestor'),
+            'tree'         => new \Twig_Filter_Method($this, 'addTreeFilter'),
+            'filter_items' => new \Twig_Filter_Method($this, 'addFilterItemsFilter'),
+            'breadcrumbs'  => new \Twig_Filter_Method($this, 'addBreadcrumbFilter'),
+            'ancestor'     => new \Twig_Filter_Method($this, 'getAncestor'),
         );
     }
 
@@ -77,15 +77,21 @@ class NavigationExtension extends \Twig_Extension
     }
 
     /**
-     * @param \RecursiveIterator $iterator
-     * @param bool               $isVisible
+     * @param \Traversable $iterator
+     * @param array        $rules
      *
      * @return CustomFilterIterator
      */
-    public function addVisibilityFilter(\RecursiveIterator $iterator, $isVisible = true)
+    public function addFilterItemsFilter(\Traversable $iterator, array $rules)
     {
-        return new CustomFilterIterator($iterator, function($item) use ($isVisible) {
-            return $item instanceof Item && $isVisible == $item->isVisible();
+        return new CustomFilterIterator($iterator, function(ItemInterface $item) use ($rules) {
+            foreach ($rules as $key => $value) {
+                if ($item->get($key) !== $value) {
+                    return false;
+                }
+            }
+
+            return true;
         });
     }
 

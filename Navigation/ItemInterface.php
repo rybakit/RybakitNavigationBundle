@@ -5,16 +5,7 @@ namespace Rybakit\Bundle\NavigationBundle\Navigation;
 interface ItemInterface extends \IteratorAggregate
 {
     /**
-     * @param ItemInterface|null $parent
-     *
-     * @return ItemInterface
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function setParent(ItemInterface $parent = null);
-
-    /**
-     * @return ItemInterface|null
+     * @return self|null
      */
     public function getParent();
 
@@ -25,19 +16,19 @@ interface ItemInterface extends \IteratorAggregate
      *
      * @throws \InvalidArgumentException
      */
-    public function add(ItemInterface $item);
+    public function addChild(ItemInterface $item);
 
     /**
-     * @param ItemInterface $item
-     *
-     * @return ItemInterface
+     * @param string $name
+     * @param mixed  $value
      */
-    public function remove(ItemInterface $item);
+    public function set($name, $value);
 
     /**
-     * @param ItemInterface $item
+     * @param string $name
+     * @param mixed  $default
      *
-     * @return bool
+     * @return mixed
      */
-    public function has(ItemInterface $item);
+    public function get($name, $default = null);
 }

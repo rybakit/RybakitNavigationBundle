@@ -14,15 +14,21 @@ abstract class AbstractItem implements ItemInterface, \Countable
      */
     protected $children;
 
+    protected $data = array();
+
     public function __construct()
     {
         $this->children = new \SplObjectStorage();
     }
 
     /**
-     * {@inheritdoc}
+     * @param self|null $parent
+     *
+     * @return AbstractItem
+     *
+     * @throws \InvalidArgumentException
      */
-    public function setParent(ItemInterface $parent = null)
+    public function setParent(self $parent = null)
     {
         if ($parent === $this) {
             throw new \InvalidArgumentException('An item cannot have itself as a parent.');
@@ -33,13 +39,13 @@ abstract class AbstractItem implements ItemInterface, \Countable
         }
 
         if ($this->parent) {
-            $this->parent->remove($this);
+            $this->parent->removeChild($this);
         }
 
         $this->parent = $parent;
 
-        if ($parent && !$parent->has($this)) {
-            $this->parent->add($this);
+        if ($parent && !$parent->hasChild($this)) {
+            $this->parent->addChild($this);
         }
 
         return $this;
@@ -56,8 +62,12 @@ abstract class AbstractItem implements ItemInterface, \Countable
     /**
      * {@inheritdoc}
      */
-    public function add(ItemInterface $item)
+    public function addChild(ItemInterface $item)
     {
+        if (!$item instanceof self) {
+            throw new \InvalidArgumentException(sprintf('An item must be an instance of "%s".', __CLASS__));
+        }
+
         if ($item === $this) {
             throw new \InvalidArgumentException('An item cannot have itself as a child.');
         }
@@ -69,11 +79,13 @@ abstract class AbstractItem implements ItemInterface, \Countable
     }
 
     /**
-     * {@inheritdoc}
+     * @param self $item
+     *
+     * @return self
      */
-    public function remove(ItemInterface $item)
+    public function removeChild(self $item)
     {
-        if ($this->has($item)) {
+        if ($this->hasChild($item)) {
             $this->children->detach($item);
             $item->setParent(null);
         }
@@ -82,9 +94,11 @@ abstract class AbstractItem implements ItemInterface, \Countable
     }
 
     /**
-     * {@inheritdoc}
+     * @param self $item
+     *
+     * @return bool
      */
-    public function has(ItemInterface $item)
+    public function hasChild(self $item)
     {
         return $this->children->contains($item);
     }
@@ -96,7 +110,31 @@ abstract class AbstractItem implements ItemInterface, \Countable
      */
     public function getIterator()
     {
-        return clone $this->children;
+        return $this->children;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $value
+     */
+    public function set($name, $value)
+    {
+        $this->data[$name] = $value;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $default
+     *
+     * @return mixed
+     */
+    public function get($name, $default = null)
+    {
+        if (isset($this->data[$name])) {
+            return $this->data[$name];
+        }
+
+        return $default;
     }
 
     /**
@@ -106,7 +144,7 @@ abstract class AbstractItem implements ItemInterface, \Countable
      */
     public function count()
     {
-        return iterator_count($this->getIterator());
+        return $this->children->count();
     }
 
     public function __clone()
@@ -117,7 +155,7 @@ abstract class AbstractItem implements ItemInterface, \Countable
         $this->children = new \SplObjectStorage();
 
         foreach ($children as $item) {
-            $this->add(clone $item);
+            $this->addChild(clone $item);
         }
     }
 }

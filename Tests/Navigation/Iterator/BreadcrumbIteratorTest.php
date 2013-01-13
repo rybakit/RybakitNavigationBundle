@@ -10,8 +10,7 @@ class BreadcrumbIteratorTest extends \PHPUnit_Framework_TestCase
     public function testIterator()
     {
         $root = new Item();
-        $level1 = new Item();
-        $level1->setParent($root);
+        $root->addChild($level1 = new Item());
 
         $iterator = new BreadcrumbIterator($level1);
 

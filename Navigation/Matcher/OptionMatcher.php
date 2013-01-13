@@ -1,6 +1,8 @@
 <?php
 
-namespace Rybakit\Bundle\NavigationBundle\Navigation\Filter\Matcher;
+namespace Rybakit\Bundle\NavigationBundle\Navigation\Matcher;
+
+use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 
 class OptionMatcher implements MatcherInterface
 {
@@ -27,12 +29,8 @@ class OptionMatcher implements MatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function match($value)
+    public function match(ItemInterface $item)
     {
-        if (is_array($value) && isset($value[$this->name])) {
-            return $this->value === $value[$this->name];
-        }
-
-        return false;
+        return $item->get($this->name) === $this->value;
     }
 }

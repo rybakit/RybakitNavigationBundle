@@ -30,29 +30,24 @@ class Item implements ItemInterface
         $this->isNonPublicPropertyWithSetterManyArgsCalled = true;
     }
 
-    public function setParent(ItemInterface $parent = null)
-    {
-        $this->parent = $parent;
-    }
-
     public function getParent()
     {
         return $this->parent;
     }
 
-    public function add(ItemInterface $item)
-    {
-    }
-
-    public function remove(ItemInterface $item)
-    {
-    }
-
-    public function has(ItemInterface $item)
+    public function addChild(ItemInterface $item)
     {
     }
 
     public function getIterator()
+    {
+    }
+
+    public function set($name, $value)
+    {
+    }
+
+    public function get($name, $default = null)
     {
     }
 }

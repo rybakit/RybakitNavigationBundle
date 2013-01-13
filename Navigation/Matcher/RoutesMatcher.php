@@ -1,6 +1,8 @@
 <?php
 
-namespace Rybakit\Bundle\NavigationBundle\Navigation\Filter\Matcher;
+namespace Rybakit\Bundle\NavigationBundle\Navigation\Matcher;
+
+use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 
 class RoutesMatcher implements MatcherInterface
 {
@@ -27,10 +29,10 @@ class RoutesMatcher implements MatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function match($value)
+    public function match(ItemInterface $item)
     {
-        if (isset($value['routes'])) {
-            foreach ($value['routes'] as $route) {
+        if ($routes = $item->get('routes')) {
+            foreach ($routes['routes'] as $route) {
                 if ($this->matchRoute($route)) {
                     return true;
                 }
@@ -39,8 +41,8 @@ class RoutesMatcher implements MatcherInterface
             return false;
         }
 
-        if (isset($value['route'])) {
-            return $this->matchRoute($value['route']);
+        if ($route = $item->get('route')) {
+            return $this->matchRoute($route);
         }
 
         return false;

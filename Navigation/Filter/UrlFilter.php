@@ -22,7 +22,7 @@ class UrlFilter implements FilterInterface
     {
         if (!empty($options['route'])) {
             $route = (array) $options['route'] + array('', array(), false);
-            $options['uri'] = $this->generator->generate($route[0], $route[1], $route[2]);
+            $item->set('uri', $this->generator->generate($route[0], $route[1], $route[2]));
         }
     }
 }

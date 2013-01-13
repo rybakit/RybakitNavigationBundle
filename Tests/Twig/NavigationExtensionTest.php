@@ -19,10 +19,8 @@ class NavigationExtensionTest extends \PHPUnit_Framework_TestCase
     public function testGetAncestorProvider()
     {
         $root = new Item();
-        $level1 = new Item();
-        $level1->setParent($root);
-        $level2 = new Item();
-        $level2->setParent($level1);
+        $root->addChild($level1 = new Item());
+        $level1->addChild($level2 = new Item());
 
         return array(
             array($root, 0, $root),

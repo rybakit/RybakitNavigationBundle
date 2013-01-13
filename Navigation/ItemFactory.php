@@ -39,7 +39,7 @@ class ItemFactory
 
         if (!empty($options['children'])) {
             foreach ($options['children'] as $childOptions) {
-                $item->add($this->create($childOptions));
+                $item->addChild($this->create($childOptions));
             }
             unset($options['children']);
         }

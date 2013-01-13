@@ -42,6 +42,7 @@
 
 {% block navlist %}
 {% spaceless %}
+    {% set items = items|tree(2) %}
     <ul class="nav nav-list">{{ block('navlist_items') }}</ul>
 {% endspaceless %}
 {% endblock %}
@@ -68,7 +69,7 @@
 {% block breadcrumbs %}
 {% spaceless %}
     <ul class="breadcrumb">
-        {% for item in items|reverse %}
+        {% for item in items|breadcrumbs|reverse %}
             <li>
                 {% if loop.last and options.last is not defined %}
                     {{ block('label') }}

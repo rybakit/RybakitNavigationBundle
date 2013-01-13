@@ -1,6 +1,8 @@
 <?php
 
-namespace Rybakit\Bundle\NavigationBundle\Navigation\Filter\Matcher;
+namespace Rybakit\Bundle\NavigationBundle\Navigation\Matcher;
+
+use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 
 class CallbackMatcher implements MatcherInterface
 {
@@ -26,8 +28,8 @@ class CallbackMatcher implements MatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function match($value)
+    public function match(ItemInterface $item)
     {
-        return call_user_func($this->callback, $value);
+        return call_user_func($this->callback, $item);
     }
 }

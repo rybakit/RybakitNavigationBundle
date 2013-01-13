@@ -44,11 +44,11 @@ use Rybakit\Bundle\NavigationBundle\Navigation\Item;
 
 $root = new Item('root');
 $child = new Item('child');
-$root->add($child);
+$root->addChild($child);
 
 $parent = $child->getParent(); // $root
-$has = $root->has($child); // true
-$root->remove($child);
+$has = $root->hasChild($child); // true
+$root->removeChild($child);
 ```
 
 ### Create tree from array
@@ -149,25 +149,25 @@ $root = $factory->create($array);
 
 ```jinja
 {# simple render #}
-{{ nav(nav.root, "my_block_name", { "opt1": "val1", "opt2": "val2" }) }}
+{{ nav(nav.root, "custom_nav_block", { "opt1": "val1", "opt2": "val2" }) }}
 
 {# render using tree filter #}
-{{ nav(nav.root|tree, "nav") }}
+{{ nav(nav.root, "nav") }}
 
 {# render using tree filter with max depth = 1 #}
-{{ nav(nav.root|tree(1), "nav") }}
+{{ nav(nav.root|tree(1), "custom_nav_block") }}
 
 {# render only visible items, max depth = 1 #}
-{{ nav(nav.root|tree(1)|visible, "nav") }}
+{{ nav(nav.root|tree(1)|filter_items({ "visible": true }), "custom_nav_block") }}
 
 {# render only hidden items #}
-{{ nav(nav.root|tree|visible(false), "nav") }}
+{{ nav(nav.root, "nav", { "visible": false }) }}
 
 {# render breadcrumbs #}
-{{ nav(nav.current|breadcrumbs, "breadcrumbs") }}
+{{ nav(nav.current, "breadcrumbs") }}
 
 {# render breadcrumbs with custom title at the end #}
-{{ nav(nav.current|breadcrumbs, "breadcrumbs", { "last": "Custom title" }) }}
+{{ nav(nav.current, "breadcrumbs", { "last": "Custom title" }) }}
 
 {# get root #}
 {{ nav.current|ancestor(0) }}
@@ -179,7 +179,7 @@ $root = $factory->create($array);
 {{ nav.current|ancestor(-1) }}
 
 {# render submenu #}
-{{ nav(nav.current|ancestor(2)|tree(2)|visible, "navlist") }}
+{{ nav(nav.current|ancestor(2), "navlist", { "visible": true }) }}
 
 ```
 
