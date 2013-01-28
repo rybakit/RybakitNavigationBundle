@@ -8,6 +8,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class UrlFilter implements FilterInterface
 {
     /**
+     * @var UrlGeneratorInterface
+     */
+    private $generator;
+
+    /**
      * @param UrlGeneratorInterface $generator
      */
     public function __construct(UrlGeneratorInterface $generator)
