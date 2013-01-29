@@ -7,8 +7,8 @@ use Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterInterface;
 class Item implements ItemInterface
 {
     protected $parent;
-    protected $children;
-    protected $attributes;
+    protected $children = array();
+    protected $attributes = array();
 
     public function __construct(array $options, FilterInterface $filter = null, self $parent = null)
     {
