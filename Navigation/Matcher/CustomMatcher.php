@@ -4,12 +4,12 @@ namespace Rybakit\Bundle\NavigationBundle\Navigation\Matcher;
 
 use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 
-class CallbackMatcher implements MatcherInterface
+class CustomMatcher implements MatcherInterface
 {
     /**
      * @var \Closure|string|array A PHP callback
      */
-    protected $callback;
+    private $callback;
 
     /**
      * @param \Closure|string|array $callback

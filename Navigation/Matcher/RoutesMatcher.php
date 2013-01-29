@@ -9,12 +9,12 @@ class RoutesMatcher implements MatcherInterface
     /**
      * @var string The route name
      */
-    protected $name;
+    private $name;
 
     /**
      * @var array The route parameters
      */
-    protected $parameters;
+    private $parameters;
 
     /**
      * @param string $name
@@ -31,8 +31,8 @@ class RoutesMatcher implements MatcherInterface
      */
     public function match(ItemInterface $item)
     {
-        if ($routes = $item->get('routes')) {
-            foreach ($routes['routes'] as $route) {
+        if ($routes = $item->getAttribute('routes')) {
+            foreach ($routes as $route) {
                 if ($this->matchRoute($route)) {
                     return true;
                 }
@@ -41,7 +41,7 @@ class RoutesMatcher implements MatcherInterface
             return false;
         }
 
-        if ($route = $item->get('route')) {
+        if ($route = $item->getAttribute('route')) {
             return $this->matchRoute($route);
         }
 
@@ -53,7 +53,7 @@ class RoutesMatcher implements MatcherInterface
      *
      * @return bool
      */
-    protected function matchRoute($route)
+    private function matchRoute($route)
     {
         $route = (array) $route + array('', array());
 

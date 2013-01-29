@@ -7,6 +7,7 @@ use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\BreadcrumbIterator;
 use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\CustomFilterIterator;
 use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\TreeIterator;
+use Rybakit\Bundle\NavigationBundle\Navigation\Matcher\AttributesMatcher;
 
 class NavigationExtension extends \Twig_Extension
 {
@@ -52,10 +53,10 @@ class NavigationExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            'tree'         => new \Twig_Filter_Method($this, 'addTreeFilter'),
-            'filter_items' => new \Twig_Filter_Method($this, 'addFilterItemsFilter'),
-            'breadcrumbs'  => new \Twig_Filter_Method($this, 'addBreadcrumbFilter'),
-            'ancestor'     => new \Twig_Filter_Method($this, 'getAncestor'),
+            'tree'        => new \Twig_Filter_Method($this, 'addTreeFilter'),
+            'items'       => new \Twig_Filter_Method($this, 'addItemsFilter'),
+            'breadcrumbs' => new \Twig_Filter_Method($this, 'addBreadcrumbFilter'),
+            'ancestor'    => new \Twig_Filter_Method($this, 'getAncestor'),
         );
     }
 
@@ -82,16 +83,12 @@ class NavigationExtension extends \Twig_Extension
      *
      * @return CustomFilterIterator
      */
-    public function addFilterItemsFilter(\Traversable $iterator, array $rules)
+    public function addItemsFilter(\Traversable $iterator, array $rules)
     {
-        return new CustomFilterIterator($iterator, function(ItemInterface $item) use ($rules) {
-            foreach ($rules as $key => $value) {
-                if ($item->get($key) !== $value) {
-                    return false;
-                }
-            }
+        $matcher = new AttributesMatcher($rules);
 
-            return true;
+        return new CustomFilterIterator($iterator, function(ItemInterface $item) use ($matcher) {
+            return $matcher->match($item);
         });
     }
 

@@ -7,6 +7,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class UrlFilter implements FilterInterface
 {
+    private $generator;
+
     /**
      * @param UrlGeneratorInterface $generator
      */
@@ -22,7 +24,15 @@ class UrlFilter implements FilterInterface
     {
         if (!empty($options['route'])) {
             $route = (array) $options['route'] + array('', array(), false);
-            $item->set('uri', $this->generator->generate($route[0], $route[1], $route[2]));
+            $url = $this->generator->generate($route[0], $route[1], $route[2]);
+            $item->setAttribute('url', $url);
+
+            /*
+            $generator = $this->generator;
+            $options['uri'] = new LazyAttribute(function(ItemInterface $item) use ($generator, $route) {
+                $item->setAttribute('uri', $generator->generate($route[0], $route[1], $route[2]));
+            });
+            */
         }
     }
 }

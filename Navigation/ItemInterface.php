@@ -2,7 +2,7 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Navigation;
 
-interface ItemInterface extends \IteratorAggregate
+interface ItemInterface
 {
     /**
      * @return self|null
@@ -10,19 +10,15 @@ interface ItemInterface extends \IteratorAggregate
     public function getParent();
 
     /**
-     * @param ItemInterface $item
-     *
-     * @return ItemInterface
-     *
-     * @throws \InvalidArgumentException
+     * @return self[]
      */
-    public function addChild(ItemInterface $item);
+    public function getChildren();
 
     /**
      * @param string $name
      * @param mixed  $value
      */
-    public function set($name, $value);
+    public function setAttribute($name, $value);
 
     /**
      * @param string $name
@@ -30,5 +26,5 @@ interface ItemInterface extends \IteratorAggregate
      *
      * @return mixed
      */
-    public function get($name, $default = null);
+    public function getAttribute($name, $default = null);
 }

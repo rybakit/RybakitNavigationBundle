@@ -10,12 +10,12 @@ class MatchFilter implements FilterInterface
     /**
      * @var MatcherInterface
      */
-    protected $matcher;
+    private $matcher;
 
     /**
      * @var ItemInterface
      */
-    protected $matched;
+    private $matched;
 
     /**
      * @param MatcherInterface $matcher
