@@ -16,16 +16,7 @@ class Item implements ItemInterface
             $this->parent = $parent;
         }
 
-        if (isset($options['children'])) {
-            $this->addChildren($options['children']);
-            unset($options['children']);
-        }
-
-        if ($filter) {
-            $filter->apply($options, $this);
-        }
-
-        $this->attributes = $options + $this->attributes;
+        $this->setOptions($options, $filter);
     }
 
     /**
@@ -64,10 +55,19 @@ class Item implements ItemInterface
         return $default;
     }
 
-    protected function addChildren(array $childrenOptions)
+    protected function setOptions(array $options, FilterInterface $filter = null)
     {
-        foreach ($childrenOptions as $childOptions) {
-            $this->children[] = new static($childOptions, $this);
+        if (isset($options['children'])) {
+            foreach ($options['children'] as $childOptions) {
+                $this->children[] = new static($childOptions, $filter, $this);
+            }
+            unset($options['children']);
         }
+
+        if ($filter) {
+            $filter->apply($options, $this);
+        }
+
+        $this->attributes = $options + $this->attributes;
     }
 }
