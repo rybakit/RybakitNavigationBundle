@@ -8,15 +8,27 @@ class Item implements ItemInterface
 {
     protected $parent;
     protected $children = array();
-    protected $attributes = array();
+    protected $attributes;
 
-    public function __construct(array $options, FilterInterface $filter = null, self $parent = null)
+    public function __construct(array $options, FilterInterface $filter = null)
     {
-        if ($parent) {
-            $this->parent = $parent;
+        if (isset($options['children'])) {
+            foreach ($options['children'] as $childOptions) {
+                $this->addChild(new static($childOptions, $filter));
+            }
+            unset($options['children']);
         }
 
-        $this->setOptions($options, $filter);
+        if ($filter) {
+            $filter->apply($options, $this);
+        }
+
+        $this->attributes = $options;
+    }
+
+    public function setParent(self $parent)
+    {
+        $this->parent = $parent;
     }
 
     /**
@@ -25,6 +37,12 @@ class Item implements ItemInterface
     public function getParent()
     {
         return $this->parent;
+    }
+
+    public function addChild(self $child)
+    {
+        $this->children[] = $child;
+        $child->setParent($this);
     }
 
     /**
@@ -53,21 +71,5 @@ class Item implements ItemInterface
         }
 
         return $default;
-    }
-
-    protected function setOptions(array $options, FilterInterface $filter = null)
-    {
-        if (isset($options['children'])) {
-            foreach ($options['children'] as $childOptions) {
-                $this->children[] = new static($childOptions, $filter, $this);
-            }
-            unset($options['children']);
-        }
-
-        if ($filter) {
-            $filter->apply($options, $this);
-        }
-
-        $this->attributes = $options + $this->attributes;
     }
 }
