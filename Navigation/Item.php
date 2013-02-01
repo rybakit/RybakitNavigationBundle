@@ -56,9 +56,23 @@ class Item implements ItemInterface
     /**
      * {@inheritdoc}
      */
-    public function setAttribute($name, $value)
+    public function setAttribute($name, $value, $mode = null)
     {
         $this->attributes[$name] = $value;
+
+        if (null === $mode) {
+            return;
+        }
+
+        if (ItemInterface::ATTR_BUBBLE === $mode) {
+            if ($this->parent) {
+                $this->parent->setAttribute($name, $value, $mode);
+            }
+        } elseif (ItemInterface::ATTR_CASCADE === $mode) {
+            foreach ($this->children as $child) {
+                $child->setAttribute($name, $value, $mode);
+            }
+        }
     }
 
     /**
