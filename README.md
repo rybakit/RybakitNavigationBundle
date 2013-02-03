@@ -42,36 +42,21 @@ public function registerBundles()
 
 use Rybakit\Bundle\NavigationBundle\Navigation\Item;
 
-$root = new Item('root');
-$child = new Item('child');
-$root->addChild($child);
-
-$parent = $child->getParent(); // $root
-$has = $root->hasChild($child); // true
-$root->removeChild($child);
-```
-
-### Create tree from array
-
-``` php
-<?php
-
-use Rybakit\Bundle\NavigationBundle\Navigation\ItemFactory;
-use Rybakit\Bundle\NavigationBundle\Navigation\Filter\BindFilter;
-
 ...
 
-$array = array(
+$root = new Item(array(
     'label'    => 'root',
     'children' => array(
         array('label' => 'Item 1.1'),
-        array('label' => 'Item 1.2', 'children' => array(array('label' => 'Item 1.2.1'))),
+        array(
+            'label'    => 'Item 1.2',
+            'children' => array(
+                array('label' => 'Item 1.2.1'),
+            ),
+        ),
         array('label' => 'Item 1.3'),
     ),
-);
-
-$factory = new ItemFactory(new BindFilter());
-$root = $factory->create($array);
+));
 ```
 
 ### Match current item
@@ -82,9 +67,8 @@ $root = $factory->create($array);
 
 namespace Acme\DemoBundle\Navigation;
 
-use Rybakit\Bundle\NavigationBundle\Navigation\ItemFactory;
-use Rybakit\Bundle\NavigationBundle\Navigation\Filter\BindFilter;
-use Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterChain;
+use Rybakit\Bundle\NavigationBundle\Navigation\Item;
+use Rybakit\Bundle\NavigationBundle\Navigation\Attribute\UpAttribute;
 use Rybakit\Bundle\NavigationBundle\Navigation\Filter\MatchFilter;
 use Rybakit\Bundle\NavigationBundle\Navigation\Filter\Matcher\RoutesMatcher;
 
@@ -97,13 +81,9 @@ class NavigationBuilder
         $route = $this->request->attributes->get('_route');
         $routeParams = $this->request->attributes->get('_route_params', array());
 
-        $filter = new FilterChain(array(
-            $matchFilter = new MatchFilter(new RoutesMatcher($route, $routeParams)),
-            new BindFilter(),
-        ));
+        $filter = new MatchFilter(new RoutesMatcher($route, $routeParams));
 
-        $factory = new ItemFactory($filter);
-        $root = $factory->create(array(
+        $array = array(
             'label'     => 'acme_demo.home',
             'route'     => 'acme_demo_home',
             'children'  => array(
@@ -113,52 +93,48 @@ class NavigationBuilder
                     'routes' => array('acme_demo_user_new', 'acme_demo_user_create'),
                 ),
             ),
-        ));
+        );
 
-        if (!$current = $matchFilter->getMatched()) {
+        $root = new Item($array, $filter);
+
+        if (!$current = $filter->getMatched()) {
             $current = $root;
         }
-        $current->setActive();
+        $current->setAttribute('active', new UpAttribute(true));
 
         return array('root' => $root, 'current' => $current);
     }
 }
 ```
 
-### Default item properties
+### Default attributes
 
 ``` php
 <?php
 
 use Rybakit\Bundle\NavigationBundle\Navigation\Item;
-use Rybakit\Bundle\NavigationBundle\Navigation\ItemFactory;
-use Rybakit\Bundle\NavigationBundle\Navigation\Filter\BindFilter;
+use Rybakit\Bundle\NavigationBundle\Navigation\Filter\DefaultsFilter;
 
 ...
 
-$item = new Item();
-
-// set translation domain to "AcmeDemoBundle" by default for all tree items
-$item->transDomain = 'AcmeDemoBundle';
-
-$factory = new ItemFactory(new BindFilter(), $item);
-$root = $factory->create($array);
+$filter = new DefaultsFilter(array('trans_domain' => 'AcmeDemoBundle'))
+$root = new Item($array, $filter);
 ```
 
 ### Twig
 
 ```jinja
-{# simple render #}
+{# render custom block #}
 {{ nav(nav.root, "custom_nav_block", { "opt1": "val1", "opt2": "val2" }) }}
 
-{# render using tree filter #}
+{# render menu #}
 {{ nav(nav.root, "nav") }}
 
 {# render using tree filter with max depth = 1 #}
 {{ nav(nav.root|tree(1), "custom_nav_block") }}
 
 {# render only visible items, max depth = 1 #}
-{{ nav(nav.root|tree(1)|filter_items({ "visible": true }), "custom_nav_block") }}
+{{ nav(nav.root|tree(1)|items({ "visible": true }), "custom_nav_block") }}
 
 {# render only hidden items #}
 {{ nav(nav.root, "nav", { "visible": false }) }}

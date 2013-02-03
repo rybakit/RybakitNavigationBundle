@@ -3,11 +3,23 @@
 namespace Rybakit\Bundle\NavigationBundle\Navigation;
 
 use Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterInterface;
+use Rybakit\Bundle\NavigationBundle\Navigation\Attribute\DynamicAttributeInterface;
 
 class Item implements ItemInterface
 {
+    /**
+     * @var self|null
+     */
     protected $parent;
+
+    /**
+     * @var self[]
+     */
     protected $children = array();
+
+    /**
+     * @var array
+     */
     protected $attributes;
 
     public function __construct(array $options, FilterInterface $filter = null)
@@ -56,22 +68,12 @@ class Item implements ItemInterface
     /**
      * {@inheritdoc}
      */
-    public function setAttribute($name, $value, $mode = null)
+    public function setAttribute($name, $value)
     {
-        $this->attributes[$name] = $value;
-
-        if (null === $mode) {
-            return;
-        }
-
-        if (ItemInterface::ATTR_BUBBLE === $mode) {
-            if ($this->parent) {
-                $this->parent->setAttribute($name, $value, $mode);
-            }
-        } elseif (ItemInterface::ATTR_CASCADE === $mode) {
-            foreach ($this->children as $child) {
-                $child->setAttribute($name, $value, $mode);
-            }
+        if ($value instanceof DynamicAttributeInterface) {
+            $value->set($this, $name);
+        } else {
+            $this->attributes[$name] = $value;
         }
     }
 
