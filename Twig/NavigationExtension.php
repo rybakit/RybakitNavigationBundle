@@ -42,7 +42,7 @@ class NavigationExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'nav' => new \Twig_Function_Method($this, 'render', array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('nav', array($this, 'render'), array('is_safe' => array('html'))),
         );
     }
 
@@ -52,10 +52,10 @@ class NavigationExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            'tree'        => new \Twig_Filter_Method($this, 'addTreeFilter'),
-            'visible'     => new \Twig_Filter_Method($this, 'addVisibilityFilter'),
-            'breadcrumbs' => new \Twig_Filter_Method($this, 'addBreadcrumbFilter'),
-            'ancestor'    => new \Twig_Filter_Method($this, 'getAncestor'),
+            new \Twig_SimpleFilter('tree', array($this, 'addTreeFilter')),
+            new \Twig_SimpleFilter('visible', array($this, 'addVisibilityFilter')),
+            new \Twig_SimpleFilter('breadcrumbs', array($this, 'addBreadcrumbFilter')),
+            new \Twig_SimpleFilter('ancestor', array($this, 'getAncestor')),
         );
     }
 
