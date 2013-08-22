@@ -56,7 +56,7 @@
 
 {% block navlist_item_children %}
 {% spaceless %}
-    <li class="nav-header">{{ item.label }}</li>
+    <li class="nav-header">{{ item.label|trans(item.transParams|default({}), item.transDomain|default(null)) }}</li>
     {% set items = items.getChildren %}
     {{ block('navlist_items') }}
 {% endspaceless %}
