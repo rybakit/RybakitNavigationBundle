@@ -5,8 +5,8 @@ namespace Rybakit\Bundle\NavigationBundle\Twig;
 use Rybakit\Bundle\NavigationBundle\Navigation\Item;
 use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\BreadcrumbIterator;
-use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\CustomFilterIterator;
-use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\TreeIterator;
+use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\RecursiveCustomFilterIterator;
+use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\RecursiveTreeIterator;
 
 class NavigationExtension extends \Twig_Extension
 {
@@ -63,11 +63,11 @@ class NavigationExtension extends \Twig_Extension
      * @param \Traversable $iterator
      * @param int|null     $depth
      *
-     * @return TreeIterator
+     * @return RecursiveTreeIterator
      */
     public function addTreeFilter(\Traversable $iterator, $depth = null)
     {
-        $iterator = new TreeIterator($iterator);
+        $iterator = new RecursiveTreeIterator($iterator);
 
         if (null !== $depth) {
             $iterator->setMaxLevel((int) $depth - 1);
@@ -80,11 +80,11 @@ class NavigationExtension extends \Twig_Extension
      * @param \RecursiveIterator $iterator
      * @param bool               $isVisible
      *
-     * @return CustomFilterIterator
+     * @return RecursiveCustomFilterIterator
      */
     public function addVisibilityFilter(\RecursiveIterator $iterator, $isVisible = true)
     {
-        return new CustomFilterIterator($iterator, function($item) use ($isVisible) {
+        return new RecursiveCustomFilterIterator($iterator, function($item) use ($isVisible) {
             return $item instanceof Item && $isVisible == $item->isVisible();
         });
     }

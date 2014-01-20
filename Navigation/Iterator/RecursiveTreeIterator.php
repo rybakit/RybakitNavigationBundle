@@ -2,7 +2,7 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Navigation\Iterator;
 
-class TreeIterator extends \IteratorIterator implements \RecursiveIterator
+class RecursiveTreeIterator extends \IteratorIterator implements \RecursiveIterator
 {
     /**
      * @var int
