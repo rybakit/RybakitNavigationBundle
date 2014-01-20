@@ -7,7 +7,7 @@ use Rybakit\Bundle\NavigationBundle\Navigation\Filter\MatchFilter;
 class MatchFilterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @dataProvider testApplyProvider
+     * @dataProvider provideApplyData
      */
     public function testApply($isMatched)
     {
@@ -23,7 +23,7 @@ class MatchFilterTest extends \PHPUnit_Framework_TestCase
         $isMatched ? $this->assertEquals($item, $filter->getMatched()) : $this->assertNull($filter->getMatched());
     }
 
-    public function testApplyProvider()
+    public function provideApplyData()
     {
         return array(array(true), array(false));
     }

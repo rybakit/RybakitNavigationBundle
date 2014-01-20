@@ -7,7 +7,7 @@ use Rybakit\Bundle\NavigationBundle\Navigation\Filter\UrlFilter;
 class UrlFilterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @dataProvider testApplyProvider
+     * @dataProvider provideApplyData
      */
     public function testApply(array $route)
     {
@@ -25,7 +25,7 @@ class UrlFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('route' => $route, 'uri' => 'generated_url'), $options);
     }
 
-    public function testApplyProvider()
+    public function provideApplyData()
     {
         return array(
             array(array('my_route1', array(), false)),

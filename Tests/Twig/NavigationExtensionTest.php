@@ -8,7 +8,7 @@ use Rybakit\Bundle\NavigationBundle\Twig\NavigationExtension;
 class NavigationExtensionTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @dataProvider testGetAncestorProvider
+     * @dataProvider provideGetAncestorData
      */
     public function testGetAncestor($item, $level, $ancestor)
     {
@@ -16,7 +16,7 @@ class NavigationExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($ancestor, $ext->getAncestor($item, $level));
     }
 
-    public function testGetAncestorProvider()
+    public function provideGetAncestorData()
     {
         $root = new Item();
         $level1 = new Item();
