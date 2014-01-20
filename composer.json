@@ -15,10 +15,9 @@
         "symfony/twig-bundle": "~2.1"
     },
     "autoload": {
-        "psr-0": {
+        "psr-4": {
             "Rybakit\\Bundle\\NavigationBundle\\": ""
         }
     },
-    "target-dir": "Rybakit/Bundle/NavigationBundle",
     "minimum-stability": "dev"
 }
