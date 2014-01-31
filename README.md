@@ -111,7 +111,7 @@ class NavigationBuilder
                 array(
                     'label'  => 'acme_demo.user_new',
                     'route'  => 'acme_demo_user_new',
-                    'routes' => array('acme_demo_user_new', 'acme_demo_user_create'),
+                    'routes' => array('acme_demo_user_create'),
                 ),
             ),
         ));
