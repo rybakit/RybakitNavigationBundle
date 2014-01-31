@@ -35,8 +35,6 @@ class RoutesMatcher implements MatcherInterface
                     return true;
                 }
             }
-
-            return false;
         }
 
         if (isset($value['route'])) {
