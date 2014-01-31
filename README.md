@@ -35,7 +35,7 @@ public function registerBundles()
 
 ## Usage Examples
 
-### Build navigation tree
+### Build a navigation tree
 
 ``` php
 <?php
@@ -51,7 +51,7 @@ $has = $root->has($child); // true
 $root->remove($child);
 ```
 
-### Create tree from array
+### Create a tree from an array
 
 ``` php
 <?php
@@ -74,7 +74,7 @@ $factory = new ItemFactory(new BindFilter());
 $root = $factory->create($array);
 ```
 
-### Match current item
+### Match the current item
 
 ``` php
 // Acme/DemoBundle/Navigation/NavigationBuilder.php
@@ -94,7 +94,8 @@ class NavigationBuilder
 
     public function createNavigation()
     {
-        $route = $this->request->attributes->get('_route');
+        $request = $this->requestStack->getMasterRequest();
+        $route = $request->attributes->get('_route');
         $routeParams = $this->request->attributes->get('_route_params', array());
 
         $filter = new FilterChain(array(
