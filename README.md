@@ -4,20 +4,12 @@ RybakitNavigationBundle
 
 ## Installation
 
-Add the following to your composer.json file
+The recommended way to install this bundle is through [Composer](http://getcomposer.org):
 
-``` json
-{
-    "require": {
-        "rybakit/navigation-bundle": "*"
-    }
-}
+```sh
+$ composer require rybakit/navigation-bundle:dev-master
 ```
-and update composer dependencies:
 
-```bash
-$ php composer.phar update rybakit/navigation-bundle
-```
 
 After you have installed the package, include RybakitNavigationBundle to your kernel class:
 
@@ -34,6 +26,8 @@ public function registerBundles()
 ```
 
 ## Usage Examples
+
+> To see how to create a menu as a service and retrieve it from different parts of your application, follow the link: https://gist.github.com/rybakit/4491556.
 
 ### Build a navigation tree
 
@@ -186,4 +180,4 @@ $root = $factory->create($array);
 
 ## License
 
-RybakitNavigationBundle is released under the MIT License. See the bundled LICENSE file for details.
+RybakitNavigationBundle is released under the MIT License. See the bundled [LICENSE](LICENSE) file for details.
