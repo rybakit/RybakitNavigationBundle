@@ -2,29 +2,22 @@
 {# http://twitter.github.com/bootstrap/components.html#navbar #}
 
 {% block nav %}
-{% spaceless %}
     <ul class="nav">{{ block('nav_items') }}</ul>
-{% endspaceless %}
 {% endblock %}
 
 {% block nav_items %}
-{% spaceless %}
     {% for item in items %}
         {{ block(items.hasChildren ? 'nav_item_children' : 'nav_item') }}
     {% endfor %}
-{% endspaceless %}
 {% endblock %}
 
 {% block nav_item %}
-{% spaceless %}
     <li{% if item.active %} class="active"{% endif %}>
         <a href="{{ item.uri }}">{{ block('label') }}</a>
     </li>
-{% endspaceless %}
 {% endblock %}
 
 {% block nav_item_children %}
-{% spaceless %}
     <li class="dropdown{% if item.active %} active{% endif %}">
         <a href="{{ item.uri }}" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
             {{ block('label') }} <b class="caret"></b>
@@ -34,39 +27,31 @@
             {{ block('nav_items') }}
         </ul>
     </li>
-{% endspaceless %}
 {% endblock %}
 
 {# Nav list #}
 {# http://twitter.github.com/bootstrap/components.html#navs #}
 
 {% block navlist %}
-{% spaceless %}
     <ul class="nav nav-list">{{ block('navlist_items') }}</ul>
-{% endspaceless %}
 {% endblock %}
 
 {% block navlist_items %}
-{% spaceless %}
     {% for item in items %}
         {{ block(items.hasChildren ? 'navlist_item_children' : 'nav_item') }}
     {% endfor %}
-{% endspaceless %}
 {% endblock %}
 
 {% block navlist_item_children %}
-{% spaceless %}
     <li class="nav-header">{{ item.label|trans(item.transParams|default({}), item.transDomain|default(null)) }}</li>
     {% set items = items.getChildren %}
     {{ block('navlist_items') }}
-{% endspaceless %}
 {% endblock %}
 
 {# Breadcrumbs #}
 {# http://twitter.github.com/bootstrap/components.html#breadcrumbs #}
 
 {% block breadcrumbs %}
-{% spaceless %}
     <ul class="breadcrumb">
         {% for item in items|reverse %}
             <li>
@@ -82,13 +67,10 @@
             <li>{{ options.last }}</li>
         {% endif %}
     </ul>
-{% endspaceless %}
 {% endblock %}
 
 {# Misc #}
 
 {% block label %}
-{% spaceless %}
     {{ item.label|trans(item.transParams|default({}), item.transDomain|default(null)) }}
-{% endspaceless %}
 {% endblock %}
