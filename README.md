@@ -7,9 +7,8 @@ RybakitNavigationBundle
 The recommended way to install this bundle is through [Composer](http://getcomposer.org):
 
 ```sh
-$ composer require rybakit/navigation-bundle:dev-master
+$ composer require rybakit/navigation-bundle:~1.0@dev
 ```
-
 
 After you have installed the package, include RybakitNavigationBundle to your kernel class:
 
