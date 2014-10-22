@@ -1,7 +1,7 @@
 {
     "name": "rybakit/navigation-bundle",
     "description": "Navigation bundle for Symfony2 applications",
-    "keywords": ["navigation menu breadcrumbs"],
+    "keywords": ["navigation", "menu", "breadcrumbs"],
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
