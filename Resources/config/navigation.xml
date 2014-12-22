@@ -4,12 +4,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-        <parameter key="rybakit_navigation.twig.extension.class">Rybakit\Bundle\NavigationBundle\Twig\NavigationExtension</parameter>
-    </parameters>
-
     <services>
-        <service id="rybakit_navigation.twig.extension" class="%rybakit_navigation.twig.extension.class%" public="false">
+        <service id="rybakit_navigation.twig.extension" class="Rybakit\Bundle\NavigationBundle\Twig\NavigationExtension" public="false">
             <argument>%rybakit_navigation.template%</argument>
             <tag name="twig.extension" />
         </service>
