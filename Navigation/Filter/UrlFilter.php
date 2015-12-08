@@ -26,7 +26,7 @@ class UrlFilter implements FilterInterface
     public function apply(array &$options, ItemInterface $item)
     {
         if (!empty($options['route'])) {
-            $route = (array) $options['route'] + array('', array(), false);
+            $route = (array) $options['route'] + array('', array(), UrlGeneratorInterface::ABSOLUTE_PATH);
             $options['uri'] = $this->generator->generate($route[0], $route[1], $route[2]);
         }
     }

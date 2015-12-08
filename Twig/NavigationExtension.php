@@ -11,11 +11,6 @@ use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\RecursiveTreeIterator;
 class NavigationExtension extends \Twig_Extension
 {
     /**
-     * @var \Twig_Environment
-     */
-    protected $environment;
-
-    /**
      * @var \Twig_Template
      */
     protected $template;
@@ -31,18 +26,13 @@ class NavigationExtension extends \Twig_Extension
     /**
      * {@inheritdoc}
      */
-    public function initRuntime(\Twig_Environment $environment)
-    {
-        $this->environment = $environment;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('nav', array($this, 'render'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('nav', array($this, 'render'), array(
+                'is_safe' => array('html'),
+                'needs_environment' => true,
+            )),
         );
     }
 
@@ -127,15 +117,16 @@ class NavigationExtension extends \Twig_Extension
      *
      * @see https://github.com/fabpot/Twig/pull/926
      *
-     * @param mixed  $item
-     * @param string $block
-     * @param array  $options
+     * @param \Twig_Environment $env
+     * @param mixed             $item
+     * @param string            $block
+     * @param array             $options
      *
      * @return string
      */
-    public function render($item, $block, array $options = array())
+    public function render(\Twig_Environment $env, $item, $block, array $options = array())
     {
-        return $this->getTemplate()->renderBlock($block, array(
+        return $this->getTemplate($env)->renderBlock($block, array(
             'items'   => $item,
             'options' => $options,
         ));
@@ -150,12 +141,14 @@ class NavigationExtension extends \Twig_Extension
     }
 
     /**
+     * @param \Twig_Environment $env
+     *
      * @return \Twig_Template
      */
-    protected function getTemplate()
+    private function getTemplate(\Twig_Environment $env)
     {
         if (!$this->template instanceof \Twig_Template) {
-            $this->template = $this->environment->loadTemplate($this->template);
+            $this->template = $env->loadTemplate($this->template);
         }
 
         return $this->template;
