@@ -2,20 +2,23 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Tests\Navigation\Filter;
 
+use PHPUnit\Framework\TestCase;
+use Rybakit\Bundle\NavigationBundle\Navigation\Filter\Matcher\MatcherInterface;
 use Rybakit\Bundle\NavigationBundle\Navigation\Filter\MatchFilter;
+use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
 
-class MatchFilterTest extends \PHPUnit_Framework_TestCase
+class MatchFilterTest extends TestCase
 {
     /**
      * @dataProvider provideApplyData
      */
-    public function testApply($isMatched)
+    public function testApply(bool $isMatched)
     {
-        $matcher = $this->getMock('\\Rybakit\\Bundle\\NavigationBundle\\Navigation\\Filter\\Matcher\\MatcherInterface');
+        $matcher = $this->createMock(MatcherInterface::class);
         $matcher->expects($this->once())->method('match')->will($this->returnValue($isMatched));
 
-        $options = array();
-        $item = $this->getMock('\\Rybakit\\Bundle\\NavigationBundle\\Navigation\\ItemInterface');
+        $options = [];
+        $item = $this->createMock(ItemInterface::class);
 
         $filter = new MatchFilter($matcher);
         $filter->apply($options, $item);
@@ -25,6 +28,6 @@ class MatchFilterTest extends \PHPUnit_Framework_TestCase
 
     public function provideApplyData()
     {
-        return array(array(true), array(false));
+        return [[true], [false]];
     }
 }

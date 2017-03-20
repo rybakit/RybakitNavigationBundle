@@ -9,12 +9,12 @@ class BindFilter implements FilterInterface
     /**
      * @var \ReflectionClass[]
      */
-    protected $classes = array();
+    protected $classes = [];
 
     /**
      * @var (\Closure|bool)[]
      */
-    protected $closures = array();
+    protected $closures = [];
 
     /**
      * {@inheritdoc}
@@ -35,26 +35,23 @@ class BindFilter implements FilterInterface
     }
 
     /**
-     * @param string $class
-     * @param string $option
-     *
      * @return \Closure|bool
      */
-    protected function resolveOption($class, $option)
+    protected function resolveOption(string $class, string $option)
     {
         $option = static::normalize($option);
         $reflClass = $this->getReflectionClass($class);
 
         $property = lcfirst($option);
         if ($this->isValidProperty($reflClass, $property)) {
-            return function(ItemInterface $item, $value) use ($property) {
+            return function (ItemInterface $item, $value) use ($property) {
                 $item->{$property} = $value;
             };
         }
 
-        $method = 'set'.$option;
+        $method = 'set' . $option;
         if ($this->isValidMethod($reflClass, $method)) {
-            return function(ItemInterface $item, $value) use ($method) {
+            return function (ItemInterface $item, $value) use ($method) {
                 $item->{$method}($value);
             };
         }
@@ -64,7 +61,7 @@ class BindFilter implements FilterInterface
 
     /**
      * @param \ReflectionClass $class
-     * @param string           $name
+     * @param string $name
      *
      * @return bool
      */
@@ -75,7 +72,7 @@ class BindFilter implements FilterInterface
 
     /**
      * @param \ReflectionClass $class
-     * @param string           $name
+     * @param string $name
      *
      * @return bool
      */

@@ -2,9 +2,10 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Tests\Navigation;
 
+use PHPUnit\Framework\TestCase;
 use Rybakit\Bundle\NavigationBundle\Navigation\Item;
 
-class ItemTest extends \PHPUnit_Framework_TestCase
+class ItemTest extends TestCase
 {
     public function testClone()
     {
