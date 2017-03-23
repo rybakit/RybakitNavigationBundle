@@ -177,7 +177,7 @@ $root = $factory->create($array);
 ```
 
 
-## Customising the navigation template
+### Customising the navigation template
 
 ```yaml
 # app/config/config.yml
