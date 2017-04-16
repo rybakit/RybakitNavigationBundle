@@ -13,7 +13,11 @@
 
 {% block nav_item %}
     <li{% if item.active %} class="active"{% endif %}>
-        <a href="{{ item.uri }}">{{ block('label') }}</a>
+        {% if item.uri is not empty %}
+            <a href="{{ item.uri }}">{{ block('label') }}</a>
+        {% else %}
+            <span>{{ block('label') }}</span>
+        {% endif %}
     </li>
 {% endblock %}
 
