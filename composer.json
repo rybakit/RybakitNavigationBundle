@@ -12,12 +12,17 @@
     ],
     "require": {
         "php": "^7.0",
-        "symfony/framework-bundle": "^3.0",
-        "symfony/twig-bundle": "^3.0"
+        "symfony/framework-bundle": "^3.0|^4.0",
+        "symfony/twig-bundle": "^3.0|^4.0"
     },
     "autoload": {
         "psr-4": {
             "Rybakit\\Bundle\\NavigationBundle\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
         }
     }
 }
