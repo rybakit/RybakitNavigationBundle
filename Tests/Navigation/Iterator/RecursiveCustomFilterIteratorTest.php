@@ -2,17 +2,19 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Tests\Navigation\Iterator;
 
+use PHPUnit\Framework\TestCase;
 use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\RecursiveCustomFilterIterator;
 
-class RecursiveCustomFilterIteratorTest extends \PHPUnit_Framework_TestCase
+class RecursiveCustomFilterIteratorTest extends TestCase
 {
     public function testAccept()
     {
-        $iterator = new \RecursiveArrayIterator(array(1, array(21, 22), 3));
+        $iterator = new \RecursiveArrayIterator([1, [21, 22], 3]);
 
         $result = null;
         $iterator = new RecursiveCustomFilterIterator($iterator, function ($item) use (&$result) {
             $result = $item;
+
             return true;
         });
 
@@ -23,10 +25,14 @@ class RecursiveCustomFilterIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testHasChildren()
     {
-        $iterator = new \RecursiveArrayIterator(array(array(11, 12)));
+        $iterator = new \RecursiveArrayIterator([[11, 12]]);
 
-        $withChildren = new RecursiveCustomFilterIterator($iterator, function ($item) { return true; });
-        $withoutChildren = new RecursiveCustomFilterIterator($iterator, function ($item) { return false; });
+        $withChildren = new RecursiveCustomFilterIterator($iterator, function ($item) {
+            return true;
+        });
+        $withoutChildren = new RecursiveCustomFilterIterator($iterator, function ($item) {
+            return false;
+        });
 
         $this->assertTrue($withChildren->hasChildren());
         $this->assertFalse($withoutChildren->hasChildren());

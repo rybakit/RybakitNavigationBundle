@@ -14,11 +14,7 @@ class RoutesMatcher implements MatcherInterface
      */
     protected $parameters;
 
-    /**
-     * @param string $name
-     * @param array  $parameters
-     */
-    public function __construct($name, array $parameters)
+    public function __construct(string $name, array $parameters)
     {
         $this->name = $name;
         $this->parameters = $parameters;
@@ -49,9 +45,9 @@ class RoutesMatcher implements MatcherInterface
      *
      * @return bool
      */
-    protected function matchRoute($route)
+    protected function matchRoute($route): bool
     {
-        $route = (array) $route + array('', array());
+        $route = (array)$route + ['', []];
 
         if ($route[0] !== $this->name) {
             return false;

@@ -22,23 +22,12 @@ class Item extends AbstractItem
     /**
      * @var array
      */
-    public $transParams = array();
+    public $transParams = [];
 
-    /**
-     * @var bool
-     */
     protected $isActive = false;
-
-    /**
-     * @var bool
-     */
     protected $isVisible = true;
 
-    /**
-     * @param string|null $label
-     * @param string|null $uri
-     */
-    public function __construct($label = null, $uri = null)
+    public function __construct(string $label = null, string $uri = null)
     {
         parent::__construct();
 
@@ -50,14 +39,9 @@ class Item extends AbstractItem
         }
     }
 
-    /**
-     * @param bool $active
-     *
-     * @return Item
-     */
-    public function setActive($active = true)
+    public function setActive(bool $active = true): self
     {
-        $this->isActive = (bool) $active;
+        $this->isActive = $active;
 
         if ($this->isActive && ($parent = $this->getParent()) instanceof self) {
             $parent->setActive();
@@ -66,22 +50,14 @@ class Item extends AbstractItem
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->isActive;
     }
 
-    /**
-     * @param bool $visible
-     *
-     * @return Item
-     */
-    public function setVisible($visible = true)
+    public function setVisible(bool $visible = true): self
     {
-        $this->isVisible = (bool) $visible;
+        $this->isVisible = $visible;
 
         foreach ($this->getIterator() as $child) {
             if ($child instanceof self) {
@@ -92,18 +68,12 @@ class Item extends AbstractItem
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isVisible()
+    public function isVisible(): bool
     {
         return $this->isVisible;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->label ?: spl_object_hash($this);
     }

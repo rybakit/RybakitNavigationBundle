@@ -9,12 +9,12 @@ class FilterChain implements FilterInterface
     /**
      * @var FilterInterface[]
      */
-    protected $filters = array();
+    protected $filters = [];
 
     /**
      * @param array $filters
      */
-    public function __construct(array $filters = array())
+    public function __construct(array $filters = [])
     {
         foreach ($filters as $filter) {
             $this->add($filter);

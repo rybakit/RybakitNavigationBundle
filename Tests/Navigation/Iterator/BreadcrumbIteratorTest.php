@@ -2,10 +2,11 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Tests\Navigation\Iterator;
 
+use PHPUnit\Framework\TestCase;
 use Rybakit\Bundle\NavigationBundle\Navigation\Iterator\BreadcrumbIterator;
 use Rybakit\Bundle\NavigationBundle\Tests\Fixtures\Item;
 
-class BreadcrumbIteratorTest extends \PHPUnit_Framework_TestCase
+class BreadcrumbIteratorTest extends TestCase
 {
     public function testIterator()
     {

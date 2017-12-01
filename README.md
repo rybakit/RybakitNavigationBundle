@@ -15,10 +15,10 @@ After you have installed the package, include RybakitNavigationBundle to your ke
 ```php
 public function registerBundles()
 {
-    $bundles = array(
+    $bundles = [
         ...
         new Rybakit\Bundle\RybakitNavigationBundle(),
-    );
+    ];
 
     ...
 }
@@ -174,8 +174,27 @@ $root = $factory->create($array);
 
 {# render submenu #}
 {{ nav(nav.current|ancestor(2)|tree(2)|visible, "navlist") }}
-
 ```
+
+
+### Customising the navigation template
+
+```yaml
+# app/config/config.yml
+rybakit_navigation:
+    template: navigation.html.twig
+```
+
+```yaml
+# app/Resources/views/navigation.html.twig
+{% extends 'RybakitNavigationBundle::navigation.html.twig' %}
+
+# override the "nav" block
+{% block nav %}
+    <ul class="nav navbar-nav">{{ block('nav_items') }}</ul>
+{% endblock %}
+```
+
 
 ## License
 

@@ -2,36 +2,39 @@
 
 namespace Rybakit\Bundle\NavigationBundle\Tests\Navigation\Filter;
 
+use PHPUnit\Framework\TestCase;
 use Rybakit\Bundle\NavigationBundle\Navigation\Filter\UrlFilter;
+use Rybakit\Bundle\NavigationBundle\Navigation\ItemInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class UrlFilterTest extends \PHPUnit_Framework_TestCase
+class UrlFilterTest extends TestCase
 {
     /**
      * @dataProvider provideApplyData
      */
     public function testApply(array $route)
     {
-        $item = $this->getMock('\\Rybakit\\Bundle\\NavigationBundle\\Navigation\\ItemInterface');
+        $item = $this->createMock(ItemInterface::class);
 
-        $urlGenerator = $this->getMock('\\Symfony\Component\\Routing\\Generator\\UrlGeneratorInterface');
+        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $urlGenerator->expects($this->once())->method('generate')
             ->with($this->equalTo($route[0]), $this->equalTo($route[1]), $this->equalTo($route[2]))
             ->will($this->returnValue('generated_url'));
 
-        $options = array('route' => $route);
+        $options = ['route' => $route];
         $filter = new UrlFilter($urlGenerator);
         $filter->apply($options, $item);
 
-        $this->assertEquals(array('route' => $route, 'uri' => 'generated_url'), $options);
+        $this->assertEquals(['route' => $route, 'uri' => 'generated_url'], $options);
     }
 
     public function provideApplyData()
     {
-        return array(
-            array(array('my_route1', array(), false)),
-            array(array('my_route2', array(), true)),
-            array(array('my_route3', array('param' => 'value'), false)),
-            array(array('my_route4', array('param' => 'value'), true)),
-        );
+        return [
+            [['my_route1', [], false]],
+            [['my_route2', [], true]],
+            [['my_route3', ['param' => 'value'], false]],
+            [['my_route4', ['param' => 'value'], true]],
+        ];
     }
 }

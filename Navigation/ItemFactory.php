@@ -6,20 +6,9 @@ use Rybakit\Bundle\NavigationBundle\Navigation\Filter\FilterInterface;
 
 class ItemFactory
 {
-    /**
-     * @var FilterInterface
-     */
-    protected $filter;
+    private $filter;
+    private $itemPrototype;
 
-    /**
-     * @var ItemInterface
-     */
-    protected $itemPrototype;
-
-    /**
-     * @param FilterInterface    $filter
-     * @param ItemInterface|null $itemPrototype
-     */
     public function __construct(FilterInterface $filter, ItemInterface $itemPrototype = null)
     {
         $this->filter = $filter;
@@ -28,12 +17,8 @@ class ItemFactory
 
     /**
      * Creates a tree using post-order traversal.
-     *
-     * @param array $options
-     *
-     * @return ItemInterface
      */
-    public function create(array $options = array())
+    public function create(array $options = []): ItemInterface
     {
         $item = clone $this->itemPrototype;
 
@@ -49,10 +34,7 @@ class ItemFactory
         return $item;
     }
 
-    /**
-     * @return FilterInterface
-     */
-    public function getFilter()
+    public function getFilter(): FilterInterface
     {
         return $this->filter;
     }
