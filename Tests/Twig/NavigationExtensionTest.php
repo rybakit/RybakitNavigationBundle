@@ -11,7 +11,7 @@ class NavigationExtensionTest extends TestCase
     /**
      * @dataProvider provideGetAncestorData
      */
-    public function testGetAncestor(Item $item, $level, ?Item $ancestor)
+    public function testGetAncestor(Item $item, $level, Item $ancestor = null)
     {
         $ext = new NavigationExtension('foo.bar.twig');
         $this->assertSame($ancestor, $ext->getAncestor($item, $level));
