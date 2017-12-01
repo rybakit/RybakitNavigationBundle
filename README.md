@@ -54,14 +54,14 @@ use Rybakit\Bundle\NavigationBundle\Navigation\Filter\BindFilter;
 
 ...
 
-$array = array(
+$array = [
     'label'    => 'root',
-    'children' => array(
-        array('label' => 'Item 1.1'),
-        array('label' => 'Item 1.2', 'children' => array(array('label' => 'Item 1.2.1'))),
-        array('label' => 'Item 1.3'),
-    ),
-);
+    'children' => [
+        ['label' => 'Item 1.1'],
+        ['label' => 'Item 1.2', 'children' => [['label' => 'Item 1.2.1']]],
+        ['label' => 'Item 1.3'],
+    ],
+];
 
 $factory = new ItemFactory(new BindFilter());
 $root = $factory->create($array);
@@ -89,32 +89,32 @@ class NavigationBuilder
     {
         $request = $this->requestStack->getMasterRequest();
         $route = $request->attributes->get('_route');
-        $routeParams = $this->request->attributes->get('_route_params', array());
+        $routeParams = $this->request->attributes->get('_route_params', []);
 
-        $filter = new FilterChain(array(
+        $filter = new FilterChain([
             $matchFilter = new MatchFilter(new RoutesMatcher($route, $routeParams)),
             new BindFilter(),
-        ));
+        ]);
 
         $factory = new ItemFactory($filter);
-        $root = $factory->create(array(
+        $root = $factory->create([
             'label'     => 'acme_demo.home',
             'route'     => 'acme_demo_home',
-            'children'  => array(
-                array(
+            'children'  => [
+                [
                     'label'  => 'acme_demo.user_new',
                     'route'  => 'acme_demo_user_new',
-                    'routes' => array('acme_demo_user_create'),
-                ),
-            ),
-        ));
+                    'routes' => ['acme_demo_user_create'],
+                ],
+            ],
+        ]);
 
         if (!$current = $matchFilter->getMatched()) {
             $current = $root;
         }
         $current->setActive();
 
-        return array('root' => $root, 'current' => $current);
+        return ['root' => $root, 'current' => $current];
     }
 }
 ```
